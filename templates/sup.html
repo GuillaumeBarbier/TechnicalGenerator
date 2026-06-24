@@ -105,10 +105,11 @@
     z-index:1;
   }
   .badge{
-    position:absolute;left:104px;top:680px;z-index:5;
+    position:absolute;left:50px;top:685px;z-index:5;
     background:#fff;color:var(--dark);font-size:10px;font-weight:700;letter-spacing:1.5px;
-    padding:7px 14px;
+    padding:7px 18px;transform:skewX(-13deg);
   }
+  .badge span{display:inline-block;transform:skewX(13deg);}
   .readmore{
     position:absolute;right:52px;top:660px;width:330px;z-index:5;text-align:right;color:#fff;
   }
@@ -172,7 +173,7 @@
     </div>
 
     <div class="gradient"></div>
-    <div class="badge">{{badge}}</div>
+    <div class="badge"><span>{{badge}}</span></div>
 
     <div class="readmore">
       <div class="ttl">READ MORE :</div>
