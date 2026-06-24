@@ -37,6 +37,9 @@ body{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:var(--bg)
 .fld input,.fld textarea{padding:8px 9px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;}
 .fld input:focus,.fld textarea:focus{outline:2px solid var(--teal);border-color:transparent;}
 .filein{margin-bottom:10px;font-size:12px;}
+.thumbrow{display:flex;align-items:center;gap:10px;margin-top:6px;}
+.thumb{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fafafa;}
+.btn.tiny{padding:5px 10px;font-size:11px;}
 
 .stage{overflow:auto;background:#d9dbe0;display:flex;justify-content:center;align-items:flex-start;padding:28px;}
 .stage-inner{box-shadow:0 8px 30px rgba(0,0,0,.18);}

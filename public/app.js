@@ -169,6 +169,7 @@ function buildForm() {
   state.pack.forEach((p, i) => {
     f.appendChild(field('Élément ' + (i + 1) + ' (' + p.icon + ')', p.label, v => state.pack[i].label = v));
     f.appendChild(field('  ↳ sous-texte', p.sub || '', v => state.pack[i].sub = v));
+    f.appendChild(packImageField(i, p));
   });
 
   sec('Description (READ MORE)');
@@ -178,6 +179,31 @@ function buildForm() {
   state.features.forEach((ft, i) =>
     f.appendChild(field(ft.label, ft.check ? '✓ (case cochée)' : ft.value,
       v => { if (!ft.check) state.features[i].value = v; })));
+}
+
+// Upload d'un visuel PNG/JPG pour un élément du pack (sinon icône SVG par défaut)
+function packImageField(i, p) {
+  const wrap = document.createElement('div');
+  wrap.className = 'fld';
+  const span = document.createElement('span');
+  span.textContent = '  ↳ visuel (PNG/JPG) — sinon icône par défaut';
+  const fin = document.createElement('input');
+  fin.type = 'file'; fin.accept = 'image/png,image/jpeg'; fin.className = 'filein';
+  fin.addEventListener('change', async e => {
+    const fl = e.target.files[0]; if (!fl) return;
+    state.pack[i].image = await fileToDataUrl(fl);
+    buildForm(); refresh();
+  });
+  wrap.append(span, fin);
+  if (p.image) {
+    const row = document.createElement('div'); row.className = 'thumbrow';
+    const im = document.createElement('img'); im.src = p.image; im.className = 'thumb';
+    const del = document.createElement('button');
+    del.type = 'button'; del.textContent = '✕ retirer'; del.className = 'btn ghost tiny';
+    del.addEventListener('click', () => { state.pack[i].image = ''; buildForm(); refresh(); });
+    row.append(im, del); wrap.append(row);
+  }
+  return wrap;
 }
 
 function fileToDataUrl(file) {

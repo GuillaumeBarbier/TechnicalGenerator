@@ -19,12 +19,12 @@
   "image": "",
   "packTitle": "INCLUDED SUP PACK",
   "pack": [
-    { "icon": "leash", "label": "SUP LEASH" },
-    { "icon": "paddle", "label": "SUP PADDLE" },
-    { "icon": "bag", "label": "SUP BAG" },
-    { "icon": "pump", "label": "SUP PUMP" },
-    { "icon": "fin", "label": "SUP FIN", "sub": "REF. LB 7580" },
-    { "icon": "repair", "label": "REPAIR KIT" }
+    { "icon": "leash", "label": "SUP LEASH", "image": "" },
+    { "icon": "paddle", "label": "SUP PADDLE", "image": "" },
+    { "icon": "bag", "label": "SUP BAG", "image": "" },
+    { "icon": "pump", "label": "SUP PUMP", "image": "" },
+    { "icon": "fin", "label": "SUP FIN", "sub": "REF. LB 7580", "image": "" },
+    { "icon": "repair", "label": "REPAIR KIT", "image": "" }
   ],
   "readMore": "ALWAYS READY TO PROVIDE THE BEST SOLUTIONS TO PROFESSIONALS, WE DECIDED THIS YEAR TO LAUNCH TWO NEW MODELS, SPECIALLY DEDICATED TO « SCHOOLS ». THE IOTA AND SIGMA BOARDS ARE REINFORCED BOTH WITH A ROBUST CONSTRUCTION AND EXTRA FEATURES, PARTICULARLY DESIGNED FOR THE INTENSIVE USE OF THE PROFESSIONALS. WITH ITS 10' AND ITS FUSION DROPSTITCH COMPOSITION, THE IOTA BOARD WILL OFFER YOU GREAT GLIDING SENSATIONS WITH A MAXIMUM OF RESPONSIVENESS.",
   "features": [
