@@ -17,6 +17,7 @@
     { "label": "VOLUME", "value": "240 L" }
   ],
   "image": "",
+  "whiteBg": false,
   "gradientFrom": "#2b8a91",
   "gradientTo": "#7a4a47",
   "packTitle": "INCLUDED SUP PACK",

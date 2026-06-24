@@ -188,9 +188,20 @@ function buildForm() {
   file.addEventListener('change', async e => {
     const fl = e.target.files[0]; if (!fl) return;
     state.image = await fileToDataUrl(fl);
+    state.whiteBg = /jpe?g/i.test(fl.type); // JPG = fond blanc, PNG = transparent
     buildForm(); refresh();
   });
   f.appendChild(file);
+
+  const bgWrap = document.createElement('label');
+  bgWrap.className = 'fld chk-fld';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.checked = !!state.whiteBg;
+  cb.addEventListener('change', e => { state.whiteBg = e.target.checked; refresh(); });
+  const cbt = document.createElement('span');
+  cbt.textContent = 'Visuel sur fond blanc (JPG) — dégradé sous le footer';
+  bgWrap.append(cb, cbt);
+  f.appendChild(bgWrap);
 
   sec('Pack inclus');
   state.pack.forEach((p, i) => {
