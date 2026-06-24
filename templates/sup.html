@@ -100,7 +100,7 @@
 
   /* ---------- Gradient band ---------- */
   .gradient{
-    position:absolute;left:0;right:0;top:640px;height:330px;
+    position:absolute;left:0;right:0;top:640px;bottom:0;
     background:linear-gradient(105deg,var(--teal-deep) 0%,#3d6f74 38%,#6a4a4d 72%,var(--maroon) 100%);
     z-index:1;
   }
@@ -117,16 +117,16 @@
 
   /* ---------- Footer features ---------- */
   .footer{
-    position:absolute;left:104px;right:52px;bottom:36px;
+    position:absolute;left:104px;right:52px;bottom:36px;z-index:5;
   }
-  .footer .divider{border-top:1px solid #d6d6d6;margin-bottom:22px;}
+  .footer .divider{border-top:1px solid rgba(255,255,255,.5);margin-bottom:22px;}
   .footer .row{display:grid;grid-template-columns:repeat(5,1fr);}
   .footer .cell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;}
-  .footer .lbl{font-size:9px;letter-spacing:1.2px;color:var(--label);}
-  .footer .val{font-family:"Heebo Black",Arial,sans-serif;font-size:18px;font-weight:800;letter-spacing:1px;color:var(--dark);}
-  .footer .boxed{border:1.5px solid #9a9a9a;font-size:11px;font-weight:700;letter-spacing:1px;
-    padding:4px 12px;color:#6a6a6a;}
-  .footer .chk{width:22px;height:22px;color:var(--dark);}
+  .footer .lbl{font-size:9px;letter-spacing:1.2px;color:rgba(255,255,255,.8);}
+  .footer .val{font-family:"Heebo Black",Arial,sans-serif;font-size:18px;font-weight:800;letter-spacing:1px;color:#fff;}
+  .footer .boxed{border:1.5px solid #fff;font-size:11px;font-weight:700;letter-spacing:1px;
+    padding:4px 12px;color:#fff;}
+  .footer .chk{width:22px;height:22px;color:#fff;}
 </style>
 </head>
 <body>
