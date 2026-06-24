@@ -1,0 +1,37 @@
+{
+  "brand": "AQUADESIGN",
+  "badge": "NEW 2026",
+  "name": "IOTA",
+  "ref": "REF. LB 7567",
+  "specsTop": [
+    { "label": "PROGRAM", "value": "ALL ROUND" },
+    { "label": "TECHNOLOGY", "value": "FUSION\nDROPSTITCH" },
+    { "label": "LEVEL", "value": "BEGINNER\nINTERMEDIATE" },
+    { "label": "WEIGHT", "value": "7.3 KG" },
+    { "label": "MAX. LOAD", "value": "UP TO 135 KG" }
+  ],
+  "specsDimensions": [
+    { "label": "LENGTH 305 cm", "value": "10'0''" },
+    { "label": "WIDTH 79 cm", "value": "31''" },
+    { "label": "THICKNESS 13 cm", "value": "5''" },
+    { "label": "VOLUME", "value": "240 L" }
+  ],
+  "image": "",
+  "packTitle": "INCLUDED SUP PACK",
+  "pack": [
+    { "icon": "leash", "label": "SUP LEASH" },
+    { "icon": "paddle", "label": "SUP PADDLE" },
+    { "icon": "bag", "label": "SUP BAG" },
+    { "icon": "pump", "label": "SUP PUMP" },
+    { "icon": "fin", "label": "SUP FIN", "sub": "REF. LB 7580" },
+    { "icon": "repair", "label": "REPAIR KIT" }
+  ],
+  "readMore": "ALWAYS READY TO PROVIDE THE BEST SOLUTIONS TO PROFESSIONALS, WE DECIDED THIS YEAR TO LAUNCH TWO NEW MODELS, SPECIALLY DEDICATED TO « SCHOOLS ». THE IOTA AND SIGMA BOARDS ARE REINFORCED BOTH WITH A ROBUST CONSTRUCTION AND EXTRA FEATURES, PARTICULARLY DESIGNED FOR THE INTENSIVE USE OF THE PROFESSIONALS. WITH ITS 10' AND ITS FUSION DROPSTITCH COMPOSITION, THE IOTA BOARD WILL OFFER YOU GREAT GLIDING SENSATIONS WITH A MAXIMUM OF RESPONSIVENESS.",
+  "features": [
+    { "label": "SUP FIN", "value": "1" },
+    { "label": "CROCO EVA PAD", "value": "COMFORT" },
+    { "label": "INCLUDED PACK", "value": "YES" },
+    { "label": "FUSION DROPSTITCH", "value": "FUSION", "boxed": true },
+    { "label": "HIGH-STRENGTH NET", "value": "", "check": true }
+  ]
+}

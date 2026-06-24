@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>{{brand}} — {{name}}</title>
+<style>
+  :root{
+    --teal:#17b3c4;
+    --teal-deep:#2b8a91;
+    --maroon:#7a4a47;
+    --red:#ed2e24;
+    --grey-bg:#efefee;
+    --label:#8a8a8a;
+    --dark:#3a3a3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#d9d9d9;}
+  @page{size:A4 portrait;margin:0;}
+
+  .sheet{
+    position:relative;
+    width:794px;
+    height:1123px;
+    background:#ffffff;
+    margin:0 auto;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--dark);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Header ---------- */
+  .brand{
+    position:absolute;top:40px;left:0;right:0;text-align:center;
+    font-weight:800;font-style:italic;font-size:17px;letter-spacing:1px;
+  }
+
+  /* ---------- Top spec table (grey) ---------- */
+  .spec-top{
+    position:absolute;top:92px;left:52px;right:52px;height:118px;
+    background:var(--grey-bg);
+    display:grid;grid-template-columns:repeat(5,1fr);
+  }
+  .spec-top .cell{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding-top:22px;text-align:center;}
+  .spec-top .lbl{font-size:9px;letter-spacing:1.5px;color:var(--label);margin-bottom:14px;}
+  .spec-top .val{font-size:14px;letter-spacing:1px;color:var(--dark);line-height:1.35;}
+
+  /* ---------- Dimensions row ---------- */
+  .spec-dims{
+    position:absolute;top:226px;left:52px;right:52px;height:70px;
+    display:grid;grid-template-columns:repeat(5,1fr);
+  }
+  .spec-dims .cell{display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .spec-dims .lbl{font-size:9px;letter-spacing:1.2px;color:var(--label);margin-bottom:8px;}
+  .spec-dims .val{font-size:28px;font-weight:800;letter-spacing:1px;color:var(--dark);}
+  .spec-dims .cell:first-child .val{}
+
+  /* ---------- Vertical pack label ---------- */
+  .pack-label{
+    position:absolute;left:20px;top:560px;
+    transform:rotate(-90deg);transform-origin:left center;
+    white-space:nowrap;font-size:13px;font-weight:800;letter-spacing:4px;color:var(--dark);
+  }
+
+  /* ---------- Board visual ---------- */
+  .board{
+    position:absolute;left:120px;top:300px;width:470px;height:760px;
+    z-index:3;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .board img{max-width:100%;max-height:100%;object-fit:contain;}
+  .board .ph{
+    width:300px;height:720px;border:2px dashed #c8c8c8;border-radius:150px;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    color:#b3b3b3;font-size:12px;letter-spacing:1px;padding:20px;
+  }
+
+  /* ---------- Included pack icons ---------- */
+  .pack-icons{
+    position:absolute;right:46px;top:300px;width:260px;
+    display:grid;grid-template-columns:1fr 1fr;gap:26px 18px;z-index:4;
+  }
+  .pack-icons .item{display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .pack-icons .disc{
+    width:104px;height:104px;border-radius:50%;background:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,.10);
+    display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+  }
+  .pack-icons .disc svg{width:54px;height:54px;}
+  .pack-icons .name{font-size:10px;letter-spacing:1.2px;color:var(--dark);line-height:1.4;}
+  .pack-icons .sub{font-size:8px;letter-spacing:1px;color:var(--label);}
+
+  /* ---------- Gradient band ---------- */
+  .gradient{
+    position:absolute;left:0;right:0;top:640px;height:330px;
+    background:linear-gradient(105deg,var(--teal-deep) 0%,#3d6f74 38%,#6a4a4d 72%,var(--maroon) 100%);
+    z-index:1;
+  }
+  .badge{
+    position:absolute;left:104px;top:680px;z-index:5;
+    background:#fff;color:var(--dark);font-size:10px;font-weight:700;letter-spacing:1.5px;
+    padding:7px 14px;
+  }
+  .readmore{
+    position:absolute;right:52px;top:660px;width:330px;z-index:5;text-align:right;color:#fff;
+  }
+  .readmore .ttl{font-size:11px;letter-spacing:2px;margin-bottom:18px;opacity:.85;}
+  .readmore .body{font-size:11px;letter-spacing:.8px;line-height:1.9;}
+
+  /* ---------- Footer features ---------- */
+  .footer{
+    position:absolute;left:104px;right:52px;bottom:36px;
+  }
+  .footer .divider{border-top:1px solid #d6d6d6;margin-bottom:22px;}
+  .footer .row{display:grid;grid-template-columns:repeat(5,1fr);}
+  .footer .cell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;}
+  .footer .lbl{font-size:9px;letter-spacing:1.2px;color:var(--label);}
+  .footer .val{font-size:18px;font-weight:800;letter-spacing:1px;color:var(--dark);}
+  .footer .boxed{border:1.5px solid #9a9a9a;font-size:11px;font-weight:700;letter-spacing:1px;
+    padding:4px 12px;color:#6a6a6a;}
+  .footer .chk{width:22px;height:22px;color:var(--dark);}
+</style>
+</head>
+<body>
+  <!-- SVG icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-leash" viewBox="0 0 64 64">
+        <path fill="none" stroke="#1a1a1a" stroke-width="3" d="M14 50c0-14 10-20 18-20s14-5 14-14"/>
+        <circle cx="14" cy="52" r="6" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+        <rect x="40" y="8" width="12" height="9" rx="2" fill="#1a1a1a"/>
+      </symbol>
+      <symbol id="i-paddle" viewBox="0 0 64 64">
+        <rect x="20" y="6" width="5" height="40" fill="#1a1a1a"/>
+        <path d="M14 44h17l-4 14h-9z" fill="#1a1a1a"/>
+        <rect x="38" y="6" width="5" height="52" fill="#1a1a1a"/>
+        <path d="M33 6h15l-3 8H36z" fill="#1a1a1a"/>
+      </symbol>
+      <symbol id="i-bag" viewBox="0 0 64 64">
+        <rect x="14" y="16" width="36" height="32" rx="5" fill="#17b3c4"/>
+        <rect x="14" y="26" width="36" height="6" fill="#0f8f9d"/>
+        <path d="M26 16c0-5 12-5 12 0" fill="none" stroke="#0f8f9d" stroke-width="3"/>
+      </symbol>
+      <symbol id="i-pump" viewBox="0 0 64 64">
+        <circle cx="32" cy="16" r="9" fill="none" stroke="#17b3c4" stroke-width="3"/>
+        <rect x="30" y="25" width="4" height="26" fill="#17b3c4"/>
+        <rect x="20" y="50" width="24" height="6" rx="2" fill="#17b3c4"/>
+        <path d="M34 30h12" stroke="#17b3c4" stroke-width="3"/>
+      </symbol>
+      <symbol id="i-fin" viewBox="0 0 64 64">
+        <path d="M16 46c0-22 28-34 32-34 0 18-10 34-32 34z" fill="#1a1a1a"/>
+      </symbol>
+      <symbol id="i-repair" viewBox="0 0 64 64">
+        <rect x="22" y="10" width="20" height="44" rx="4" fill="#f29423"/>
+        <rect x="26" y="6" width="12" height="8" rx="2" fill="#d97c12"/>
+        <rect x="28" y="22" width="8" height="3" fill="#fff"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="sheet">
+    <div class="brand">{{brand}}</div>
+
+    <div class="spec-top">
+      {{#each specsTop}}
+      <div class="cell">
+        <div class="lbl">{{label}}</div>
+        <div class="val">{{value}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="spec-dims">
+      <div class="cell">
+        <div class="lbl">{{ref}}</div>
+        <div class="val">{{name}}</div>
+      </div>
+      {{#each specsDimensions}}
+      <div class="cell">
+        <div class="lbl">{{label}}</div>
+        <div class="val">{{value}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="pack-label">+ {{packTitle}}</div>
+
+    <div class="board">
+      {{#if image}}<img src="{{image}}" alt="{{name}}">{{else}}<div class="ph">VISUEL PRODUIT<br>(image / URL)</div>{{/if}}
+    </div>
+
+    <div class="pack-icons">
+      {{#each pack}}
+      <div class="item">
+        <div class="disc"><svg><use href="#i-{{icon}}"></use></svg></div>
+        <div class="name">{{label}}</div>
+        {{#if sub}}<div class="sub">{{sub}}</div>{{/if}}
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="gradient"></div>
+    <div class="badge">{{badge}}</div>
+
+    <div class="readmore">
+      <div class="ttl">READ MORE :</div>
+      <div class="body">{{readMore}}</div>
+    </div>
+
+    <div class="footer">
+      <div class="divider"></div>
+      <div class="row">
+        {{#each features}}
+        <div class="cell">
+          <div class="lbl">{{label}}</div>
+          {{#if check}}
+          <svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg>
+          {{else}}{{#if boxed}}<div class="boxed">{{value}}</div>{{else}}<div class="val">{{value}}</div>{{/if}}{{/if}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

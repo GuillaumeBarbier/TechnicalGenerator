@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de fiches techniques</title>
+<link rel="stylesheet" href="/editor.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brandmark">Fiches techniques <span>· SUP</span></div>
+    <div class="actions">
+      <button id="reset-btn" class="btn ghost">Réinitialiser</button>
+      <button id="print-btn" class="btn primary">Imprimer / PDF</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="ai-box">
+        <h3>⚡ Extraction automatique (IA)</h3>
+        <p class="hint">Collez le lien de la page produit ; l’agent IA extrait les données.</p>
+        <input id="producturl" type="url" placeholder="https://www.marque.com/produit/…">
+        <button id="extract-btn" class="btn primary full">Extraire &amp; remplir</button>
+        <div id="extract-status" class="status"></div>
+      </div>
+      <div id="form" class="form"></div>
+    </section>
+
+    <section class="stage">
+      <div class="stage-inner">
+        <iframe id="preview" title="Aperçu A4"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
