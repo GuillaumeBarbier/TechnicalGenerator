@@ -135,6 +135,33 @@ function field(label, value, oninput, opts = {}) {
   return wrap;
 }
 
+function normHex(v) {
+  if (!v) return null; v = v.trim();
+  if (/^#[0-9a-f]{6}$/i.test(v)) return v;
+  if (/^#[0-9a-f]{3}$/i.test(v)) return '#' + v.slice(1).split('').map(c => c + c).join('');
+  return null;
+}
+
+// Sélecteur de couleur : picker + saisie hexadécimale synchronisés
+function colorField(label, value, onset) {
+  const wrap = document.createElement('label');
+  wrap.className = 'fld';
+  const span = document.createElement('span'); span.textContent = label;
+  const row = document.createElement('div'); row.className = 'colorrow';
+  const col = document.createElement('input');
+  col.type = 'color'; col.value = normHex(value) || '#000000';
+  const txt = document.createElement('input');
+  txt.type = 'text'; txt.value = value || ''; txt.placeholder = '#RRGGBB'; txt.className = 'hexin';
+  col.addEventListener('input', e => { onset(e.target.value); txt.value = e.target.value; scheduleRefresh(); });
+  txt.addEventListener('input', e => {
+    const v = e.target.value.trim(); onset(v);
+    const n = normHex(v); if (n) col.value = n;
+    scheduleRefresh();
+  });
+  row.append(col, txt); wrap.append(span, row);
+  return wrap;
+}
+
 function buildForm() {
   const f = document.getElementById('form');
   f.innerHTML = '';
@@ -171,6 +198,10 @@ function buildForm() {
     f.appendChild(field('  ↳ sous-texte', p.sub || '', v => state.pack[i].sub = v));
     f.appendChild(packImageField(i, p));
   });
+
+  sec('Couleurs du dégradé');
+  f.appendChild(colorField('Couleur gauche', state.gradientFrom, v => state.gradientFrom = v));
+  f.appendChild(colorField('Couleur droite', state.gradientTo, v => state.gradientTo = v));
 
   sec('Description (READ MORE)');
   f.appendChild(field('Texte', state.readMore, v => state.readMore = v, { area: true }));

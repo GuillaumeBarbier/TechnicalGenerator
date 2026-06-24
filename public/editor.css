@@ -40,6 +40,9 @@ body{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:var(--bg)
 .thumbrow{display:flex;align-items:center;gap:10px;margin-top:6px;}
 .thumb{width:46px;height:46px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fafafa;}
 .btn.tiny{padding:5px 10px;font-size:11px;}
+.colorrow{display:flex;gap:8px;align-items:center;}
+.colorrow input[type=color]{width:42px;height:34px;padding:0;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;}
+.colorrow .hexin{flex:1;}
 
 .stage{overflow:auto;background:#d9dbe0;display:flex;justify-content:center;align-items:flex-start;padding:28px;}
 .stage-inner{box-shadow:0 8px 30px rgba(0,0,0,.18);}
