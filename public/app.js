@@ -102,7 +102,6 @@ function render(tpl, data) {
 /* ---------- Schéma du formulaire SUP ---------- */
 const SCHEMA = {
   text: [
-    { key: 'brand', label: 'Marque' },
     { key: 'badge', label: 'Badge (ex: NEW 2026)' },
     { key: 'name', label: 'Nom du modèle' },
     { key: 'ref', label: 'Référence' },
@@ -162,6 +161,15 @@ function colorField(label, value, onset) {
   return wrap;
 }
 
+// Bloc "Titre + Valeur" éditables pour une cellule
+function twoFields(labelVal, onLabel, valVal, onValue, valueOpts = {}) {
+  const box = document.createElement('div');
+  box.className = 'pairgrp';
+  box.appendChild(field('Titre', labelVal, onLabel));
+  box.appendChild(field('Valeur', valVal, onValue, valueOpts));
+  return box;
+}
+
 function buildForm() {
   const f = document.getElementById('form');
   f.innerHTML = '';
@@ -175,11 +183,15 @@ function buildForm() {
 
   sec('Caractéristiques principales');
   state.specsTop.forEach((s, i) =>
-    f.appendChild(field(s.label, s.value, v => state.specsTop[i].value = v)));
+    f.appendChild(twoFields(
+      s.label, v => state.specsTop[i].label = v,
+      s.value, v => state.specsTop[i].value = v)));
 
   sec('Dimensions');
   state.specsDimensions.forEach((s, i) =>
-    f.appendChild(field(s.label, s.value, v => state.specsDimensions[i].value = v)));
+    f.appendChild(twoFields(
+      s.label, v => state.specsDimensions[i].label = v,
+      s.value, v => state.specsDimensions[i].value = v)));
 
   sec('Visuel produit');
   f.appendChild(field('URL ou base64 de l’image', state.image, v => state.image = v));
@@ -204,10 +216,13 @@ function buildForm() {
   f.appendChild(bgWrap);
 
   sec('Pack inclus');
+  f.appendChild(field('Intitulé du pack (label vertical)', state.packTitle, v => state.packTitle = v));
   state.pack.forEach((p, i) => {
-    f.appendChild(field('Élément ' + (i + 1) + ' (' + p.icon + ')', p.label, v => state.pack[i].label = v));
-    f.appendChild(field('  ↳ sous-texte', p.sub || '', v => state.pack[i].sub = v));
-    f.appendChild(packImageField(i, p));
+    const box = document.createElement('div'); box.className = 'pairgrp';
+    box.appendChild(field('Élément ' + (i + 1), p.label, v => state.pack[i].label = v));
+    box.appendChild(field('Sous-texte', p.sub || '', v => state.pack[i].sub = v));
+    box.appendChild(packImageField(i, p));
+    f.appendChild(box);
   });
 
   sec('Couleurs du dégradé');
@@ -218,9 +233,17 @@ function buildForm() {
   f.appendChild(field('Texte', state.readMore, v => state.readMore = v, { area: true }));
 
   sec('Caractéristiques bas de page');
-  state.features.forEach((ft, i) =>
-    f.appendChild(field(ft.label, ft.check ? '✓ (case cochée)' : ft.value,
-      v => { if (!ft.check) state.features[i].value = v; })));
+  state.features.forEach((ft, i) => {
+    const box = document.createElement('div'); box.className = 'pairgrp';
+    box.appendChild(field('Titre', ft.label, v => state.features[i].label = v));
+    const tog = document.createElement('label'); tog.className = 'fld chk-fld';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!ft.check;
+    cb.addEventListener('change', e => { state.features[i].check = e.target.checked; buildForm(); refresh(); });
+    const t = document.createElement('span'); t.textContent = 'Afficher une coche ✓ (au lieu d’une valeur)';
+    tog.append(cb, t); box.appendChild(tog);
+    if (!ft.check) box.appendChild(field('Valeur', ft.value, v => state.features[i].value = v));
+    f.appendChild(box);
+  });
 }
 
 // Upload d'un visuel PNG/JPG pour un élément du pack (sinon icône SVG par défaut)
