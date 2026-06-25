@@ -116,8 +116,17 @@ body{
 .chk-fld{flex-direction:row;align-items:center;gap:9px;cursor:pointer;}
 .chk-fld span{font-weight:500;}
 .chk-fld input[type=checkbox]{
-  width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none;
+  -webkit-appearance:none;appearance:none;flex:none;position:relative;cursor:pointer;
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);background:#fff;
+  transition:background .15s ease,border-color .15s ease;
 }
+.chk-fld input[type=checkbox]:hover{border-color:var(--accent);}
+.chk-fld input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent);}
+.chk-fld input[type=checkbox]:checked::after{
+  content:"";position:absolute;left:6px;top:2.5px;width:5px;height:9px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+.chk-fld input[type=checkbox]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-soft);}
 
 /* ---------- Color picker ---------- */
 .colorrow{display:flex;gap:9px;align-items:center;}
