@@ -275,7 +275,7 @@ function packImageField(i, p) {
   const wrap = document.createElement('div');
   wrap.className = 'fld';
   const span = document.createElement('span');
-  span.textContent = '  ↳ visuel (PNG/JPG) — sinon icône par défaut';
+  span.textContent = 'Ajouter la photo de l’accessoire en .png ou .jpg';
   const fin = document.createElement('input');
   fin.type = 'file'; fin.accept = 'image/png,image/jpeg'; fin.className = 'filein';
   fin.addEventListener('change', async e => {
