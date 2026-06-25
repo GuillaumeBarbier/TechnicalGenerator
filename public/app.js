@@ -347,15 +347,6 @@ function imageUploadField(key, label, opts = {}) {
 }
 
 /* ---------- Couleurs auto du dégradé (analyse de la 1ʳᵉ photo) ---------- */
-async function imageToDataUrl(src) {
-  if (!src) return '';
-  if (src.startsWith('data:')) return src;
-  try {
-    const r = await fetch('/api/fetch-image?url=' + encodeURIComponent(src));
-    return (await r.json()).dataUrl || '';
-  } catch { return ''; }
-}
-
 const toHex = c => '#' + [c.r, c.g, c.b].map(x => Math.max(0, Math.min(255, x)).toString(16).padStart(2, '0')).join('');
 const darken = (c, f) => ({ r: Math.round(c.r * f), g: Math.round(c.g * f), b: Math.round(c.b * f) });
 const colDist = (a, b) => Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
@@ -393,14 +384,21 @@ function dominantColors(dataUrl) {
   });
 }
 
-async function autoGradientFromImage() {
-  const du = await imageToDataUrl(state.image);
-  if (!du) return false;
-  const cols = await dominantColors(du);
-  if (!cols) return false;
+function applyColors(cols) {
+  if (!cols || cols.length < 2) return false;
   state.gradientFrom = cols[0];
   state.gradientTo = cols[1];
   return true;
+}
+
+async function autoGradientFromImage() {
+  const src = state.image;
+  if (!src) return false;
+  if (src.startsWith('data:')) return applyColors(await dominantColors(src)); // upload -> canvas
+  try {
+    const r = await fetch('/api/colors?url=' + encodeURIComponent(src));     // distante -> serveur
+    return applyColors((await r.json()).colors);
+  } catch { return false; }
 }
 
 // QR code généré depuis l'URL produit (débounce -> /api/qr)
@@ -458,7 +456,7 @@ async function extractFromUrl() {
         if (data.data.gallery[1]) state.image3 = data.data.gallery[1];
       }
     }
-    await autoGradientFromImage(); // dégradé auto depuis la photo principale
+    if (!applyColors(data.data.colors)) await autoGradientFromImage(); // dégradé auto
     buildForm(); refresh();
     if (tplId === 'generic') generateQrFromUrl();
     status.textContent = '✅ Données extraites. Vérifiez et ajustez si besoin.';
