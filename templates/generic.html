@@ -64,11 +64,11 @@
   .badge span{display:inline-block;transform:skewX(13deg);}
 
   /* Description (gauche, fond blanc) */
-  .gen-desc{position:absolute;left:40px;top:860px;width:520px;
+  .gen-desc{position:absolute;left:40px;top:860px;width:410px;
     font-size:10px;letter-spacing:.6px;line-height:2.0;color:var(--dark);text-align:left;}
 
   /* QR code (bas droite) */
-  .gen-qr{position:absolute;right:60px;top:855px;width:150px;height:150px;
+  .gen-qr{position:absolute;right:95px;top:835px;width:150px;height:150px;
     display:flex;align-items:center;justify-content:center;}
   .gen-qr img{width:100%;height:100%;}
   .gen-qr .ph-ico{width:54px;height:54px;}
@@ -114,7 +114,7 @@
     <div class="gen-desc">{{readMore}}</div>
 
     {{#if showQr}}
-    <div class="gen-qr">{{#if qr}}<img src="{{qr}}" alt="QR">{{else}}<svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="#c2c2c2" stroke-width="1.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7M17 21h4"/></svg>{{/if}}</div>
+    <div class="gen-qr">{{#if qr}}<img src="{{qr}}" alt="QR">{{else}}<svg class="ph-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c2c2c2" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8 3 3 3 3 8 3"/><polyline points="16 3 21 3 21 3 21 8"/><polyline points="3 16 3 21 3 21 8 21"/><polyline points="16 21 21 21 21 21 21 16"/><rect x="6" y="6" width="4" height="4"/><rect x="6" y="13.5" width="4" height="4"/><rect x="13.5" y="6" width="4" height="4"/><g fill="#c2c2c2" stroke="none"><rect x="13" y="12.9" width="1.7" height="1.7" rx=".4" ry=".4"/><rect x="16.3" y="12.9" width="1.7" height="1.7" rx=".4" ry=".4"/><rect x="13" y="16.3" width="1.7" height="1.7" rx=".4" ry=".4"/><rect x="16.3" y="16.3" width="1.7" height="1.7" rx=".4" ry=".4"/><rect x="14.7" y="14.6" width="1.7" height="1.7" rx=".4" ry=".4"/></g></svg>{{/if}}</div>
     {{/if}}
 
     <div class="gradient"></div>
