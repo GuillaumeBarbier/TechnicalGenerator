@@ -117,7 +117,8 @@ body{
 .chk-fld span{font-weight:500;}
 .chk-fld input[type=checkbox]{
   -webkit-appearance:none;appearance:none;flex:none;position:relative;cursor:pointer;
-  width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);background:#fff;
+  width:20px;height:20px;min-width:20px;padding:0;box-shadow:none;
+  border-radius:50%;border:2px solid var(--line-strong);background:#fff;
   transition:background .15s ease,border-color .15s ease;
 }
 .chk-fld input[type=checkbox]:hover{border-color:var(--accent);}
