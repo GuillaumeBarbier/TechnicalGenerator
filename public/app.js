@@ -182,10 +182,18 @@ function descriptionField() {
   return wrap;
 }
 
-// Bloc "Titre + Valeur" éditables pour une cellule
-function twoFields(labelVal, onLabel, valVal, onValue, valueOpts = {}) {
+// Bloc "Titre + Valeur" éditables pour une cellule (+ toggle d'affichage optionnel)
+function twoFields(labelVal, onLabel, valVal, onValue, valueOpts = {}, toggle = null) {
+  const on = toggle ? toggle.get() !== false : true;
   const box = document.createElement('div');
-  box.className = 'pairgrp';
+  box.className = 'pairgrp' + (on ? '' : ' disabled');
+  if (toggle) {
+    const t = document.createElement('label'); t.className = 'fld chk-fld';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = on;
+    cb.addEventListener('change', e => { toggle.set(e.target.checked); buildForm(); refresh(); });
+    const s = document.createElement('span'); s.textContent = 'Afficher cette spec';
+    t.append(cb, s); box.appendChild(t);
+  }
   box.appendChild(field('Titre', labelVal, onLabel));
   box.appendChild(field('Valeur', valVal, onValue, valueOpts));
   return box;
@@ -207,13 +215,16 @@ function buildForm() {
     f.appendChild(twoFields(
       s.label, v => state.specsTop[i].label = v,
       s.value, v => state.specsTop[i].value = v,
-      { area: true, rows: 2 })));
+      { area: true, rows: 2 },
+      { get: () => state.specsTop[i].enabled, set: v => state.specsTop[i].enabled = v })));
 
   sec('Dimensions');
   state.specsDimensions.forEach((s, i) =>
     f.appendChild(twoFields(
       s.label, v => state.specsDimensions[i].label = v,
-      s.value, v => state.specsDimensions[i].value = v)));
+      s.value, v => state.specsDimensions[i].value = v,
+      {},
+      { get: () => state.specsDimensions[i].enabled, set: v => state.specsDimensions[i].enabled = v })));
 
   sec(tplId === 'generic' ? 'Visuel produit principal' : 'Visuel produit');
   f.appendChild(field('URL ou base64 de l’image', state.image, v => state.image = v));
@@ -477,7 +488,12 @@ function mergeExtracted(base, ext) {
   // REF (titre) de la première cellule des caractéristiques principales
   if (ext.ref && out.specsTop[0]) out.specsTop[0].label = ext.ref;
   // L'IA peut substituer titre ET valeur si l'info attendue est absente
-  const mergeCell = (dst, s) => { if (!dst || !s) return; if (s.label) dst.label = s.label; if (s.value) dst.value = s.value; };
+  const mergeCell = (dst, s) => {
+    if (!dst || !s) return;
+    if (s.label) dst.label = s.label;
+    if (s.value) dst.value = s.value;
+    if (typeof s.enabled === 'boolean') dst.enabled = s.enabled;
+  };
   if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => mergeCell(out.specsTop[i], s));
   if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => mergeCell(out.specsDimensions[i], s));
   if (Array.isArray(ext.features)) ext.features.forEach((s, i) => {

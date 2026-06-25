@@ -6,41 +6,50 @@
   "specsTop": [
     {
       "label": "REF. LBXXXX",
-      "value": "NOM"
+      "value": "NOM",
+      "enabled": true
     },
     {
       "label": "PROGRAMME",
-      "value": "ALL ROUND"
+      "value": "ALL ROUND",
+      "enabled": true
     },
     {
       "label": "NIVEAU",
-      "value": "DÉBUTANT\nINTERMÉDIAIRE"
+      "value": "DÉBUTANT\nINTERMÉDIAIRE",
+      "enabled": true
     },
     {
       "label": "TECHNOLOGIE",
-      "value": "DROPSTITCH\nFUSION"
+      "value": "DROPSTITCH\nFUSION",
+      "enabled": true
     },
     {
       "label": "CHARGE MAX.",
-      "value": "JUSQU'À XXX KG"
+      "value": "JUSQU'À XXX KG",
+      "enabled": true
     }
   ],
   "specsDimensions": [
     {
       "label": "LONGUEUR XXX cm",
-      "value": "XX'X"
+      "value": "XX'X",
+      "enabled": true
     },
     {
       "label": "LARGEUR XX cm",
-      "value": "XX''"
+      "value": "XX''",
+      "enabled": true
     },
     {
       "label": "ÉPAISSEUR XX cm",
-      "value": "X''"
+      "value": "X''",
+      "enabled": true
     },
     {
       "label": "VOLUME",
-      "value": "XXX L"
+      "value": "XXX L",
+      "enabled": true
     }
   ],
   "image": "",
