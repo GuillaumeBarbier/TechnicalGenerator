@@ -110,11 +110,39 @@ const SCHEMA = { text: [{ key: 'badge', label: 'Badge (ex: NEW 2026)' }] };
 let tplId = 'sup';
 let state = null;
 let templateHtml = '';
+let CATEGORIES = [];
+
+function getCategory(id) {
+  return CATEGORIES.find(c => c.id === id) || CATEGORIES.find(c => c.id === 'sup') || CATEGORIES[0] || null;
+}
+
+// Applique les intitulés figés d'une catégorie : on conserve la 1re cellule
+// specsTop (référence) et on impose les labels/ordre des specs comparables.
+function applyCategoryLabels(catId) {
+  const cat = getCategory(catId);
+  if (!cat || !state) return;
+  state.category = cat.id;
+  if (Array.isArray(state.specsTop)) {
+    cat.specsTop.forEach((s, i) => {
+      const dst = state.specsTop[i + 1]; // [0] = référence, conservée
+      if (dst) dst.label = s.label;
+    });
+  }
+  if (Array.isArray(state.specsDimensions)) {
+    cat.specsDimensions.forEach((s, i) => {
+      const dst = state.specsDimensions[i];
+      if (dst) dst.label = s.label;
+    });
+  }
+}
 
 async function loadTemplate(id) {
   if (TEMPLATES[id]) tplId = id;
   templateHtml = await fetch(TEMPLATES[tplId].file).then(r => r.text());
   state = await fetch(TEMPLATES[tplId].sample).then(r => r.json());
+  if (!state.category) state.category = 'sup';
+  const sel = document.getElementById('cat-select');
+  if (sel && CATEGORIES.length) sel.value = state.category;
   buildForm();
   refresh();
 }
@@ -448,13 +476,14 @@ async function extractFromUrl() {
   const url = document.getElementById('producturl').value.trim();
   const status = document.getElementById('extract-status');
   if (!url) { status.textContent = 'Entrez une URL.'; return; }
+  const category = (document.getElementById('cat-select') || {}).value || state.category || 'sup';
   status.textContent = '⏳ Extraction en cours…';
   document.getElementById('extract-btn').disabled = true;
   try {
     const res = await fetch('/api/extract', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, category: 'sup' }),
+      body: JSON.stringify({ url, category }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur serveur');
@@ -511,6 +540,27 @@ function mergeExtracted(base, ext) {
   return out;
 }
 
+async function loadCategories() {
+  const sel = document.getElementById('cat-select');
+  if (!sel) return;
+  try {
+    const r = await fetch('/api/categories');
+    CATEGORIES = (await r.json()).categories || [];
+  } catch {
+    try { CATEGORIES = (await fetch('/data/categories.json').then(r => r.json())).categories || []; }
+    catch { CATEGORIES = []; }
+  }
+  sel.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const o = document.createElement('option'); o.value = c.id; o.textContent = c.name; sel.appendChild(o);
+  });
+  sel.value = (state && state.category) || 'sup';
+  sel.addEventListener('change', e => {
+    applyCategoryLabels(e.target.value);
+    buildForm(); refresh();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const sel = document.getElementById('tpl-select');
   Object.entries(TEMPLATES).forEach(([id, t]) => {
@@ -519,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
   sel.value = tplId;
   sel.addEventListener('change', e => loadTemplate(e.target.value));
 
+  loadCategories();
   boot();
   document.getElementById('print-btn').addEventListener('click', printSheet);
   document.getElementById('extract-btn').addEventListener('click', extractFromUrl);

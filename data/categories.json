@@ -1,0 +1,140 @@
+{
+  "_comment": "Schéma de specs par catégorie de produit. La 1re cellule de specsTop (REF/NOM) est ajoutée automatiquement. specsTop = 4 cellules, specsDimensions = 4 cellules. 'label' = intitulé affiché (figé pour comparer les modèles), 'value' = exemple/indice pour l'IA. 'note' = consigne IA spécifique à la catégorie.",
+  "categories": [
+    {
+      "id": "sup",
+      "name": "Stand Up Paddle",
+      "note": "Pour les dimensions, intègre la mesure métrique dans le label (ex: 'LONGUEUR 305 cm') et mets l'équivalent en pieds/pouces dans value (ex: 10').",
+      "specsTop": [
+        { "label": "PROGRAMME", "value": "ex: ALL ROUND / RANDONNÉE / SURF" },
+        { "label": "NIVEAU", "value": "ex: DÉBUTANT INTERMÉDIAIRE" },
+        { "label": "TECHNOLOGIE", "value": "ex: DROPSTITCH FUSION" },
+        { "label": "CHARGE MAX.", "value": "ex: JUSQU'À 135 KG" }
+      ],
+      "specsDimensions": [
+        { "label": "LONGUEUR", "value": "ex: 10'" },
+        { "label": "LARGEUR", "value": "ex: 32''" },
+        { "label": "ÉPAISSEUR", "value": "ex: 6''" },
+        { "label": "VOLUME", "value": "ex: 280 L" }
+      ]
+    },
+    {
+      "id": "kayak",
+      "name": "Canoë / Kayak gonflable",
+      "note": "Dimensions en cm dans le label si pertinent (ex: 'LONGUEUR 320 cm').",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: RANDONNÉE / PÊCHE / EAUX VIVES" },
+        { "label": "PLACES", "value": "ex: 1 À 2" },
+        { "label": "TECHNOLOGIE", "value": "ex: DROPSTITCH / PVC RENFORCÉ" },
+        { "label": "CHARGE MAX.", "value": "ex: JUSQU'À 150 KG" }
+      ],
+      "specsDimensions": [
+        { "label": "LONGUEUR", "value": "ex: 320 cm" },
+        { "label": "LARGEUR", "value": "ex: 90 cm" },
+        { "label": "POIDS", "value": "ex: 12 KG" },
+        { "label": "PRESSION", "value": "ex: 0.3 BAR" }
+      ]
+    },
+    {
+      "id": "gilet",
+      "name": "Gilet d'aide à la flottabilité",
+      "note": "Si une donnée varie selon la taille, exprime-la en PLAGE: TAILLES 'XS à XXL', FLOTTABILITÉ '35 à 70N'.",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: CANOË KAYAK / SUP / VOILE" },
+        { "label": "NORME", "value": "ex: EN ISO 12402-5" },
+        { "label": "MATIÈRE", "value": "ex: NYLON 420D" },
+        { "label": "FLOTTABILITÉ", "value": "ex: 50N" }
+      ],
+      "specsDimensions": [
+        { "label": "TAILLES", "value": "plage, ex: XS à XXL" },
+        { "label": "FLOTTABILITÉ", "value": "plage, ex: 35 à 70N" },
+        { "label": "POIDS", "value": "ex: 600 G" },
+        { "label": "FERMETURE", "value": "ex: ZIP" }
+      ]
+    },
+    {
+      "id": "pagaie",
+      "name": "Pagaie",
+      "note": "Longueur réglable -> plage (ex: '170 à 210 cm').",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: SUP / KAYAK / RAFT" },
+        { "label": "MATIÈRE", "value": "ex: ALUMINIUM / FIBRE / CARBONE" },
+        { "label": "BRINS", "value": "ex: 3 BRINS" },
+        { "label": "RÉGLAGE", "value": "ex: RÉGLABLE / FIXE" }
+      ],
+      "specsDimensions": [
+        { "label": "LONGUEUR", "value": "plage, ex: 170 à 210 cm" },
+        { "label": "POIDS", "value": "ex: 950 G" },
+        { "label": "SURFACE PALE", "value": "ex: 600 cm²" },
+        { "label": "DIAMÈTRE MANCHE", "value": "ex: 29 mm" }
+      ]
+    },
+    {
+      "id": "raft",
+      "name": "Raft / Packraft",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: RIVIÈRE / LOISIR / COMPÉTITION" },
+        { "label": "PLACES", "value": "ex: 6 À 8" },
+        { "label": "MATIÈRE", "value": "ex: PVC / NÉOPRÈNE / HYPALON" },
+        { "label": "CHARGE MAX.", "value": "ex: JUSQU'À 700 KG" }
+      ],
+      "specsDimensions": [
+        { "label": "LONGUEUR", "value": "ex: 380 cm" },
+        { "label": "LARGEUR", "value": "ex: 180 cm" },
+        { "label": "POIDS", "value": "ex: 35 KG" },
+        { "label": "CHAMBRES", "value": "ex: 4 CHAMBRES" }
+      ]
+    },
+    {
+      "id": "neoprene",
+      "name": "Néoprène (combinaison)",
+      "note": "TAILLES en plage (ex: 'S à XXL').",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: EAUX VIVES / SUP / NAGE" },
+        { "label": "COUPE", "value": "ex: LONG JOHN / SHORTY / BOLÉRO" },
+        { "label": "ÉPAISSEUR", "value": "ex: 3 mm" },
+        { "label": "MATIÈRE", "value": "ex: NÉOPRÈNE DOUBLÉ" }
+      ],
+      "specsDimensions": [
+        { "label": "TAILLES", "value": "plage, ex: S à XXL" },
+        { "label": "ÉPAISSEUR", "value": "ex: 3 mm" },
+        { "label": "FERMETURE", "value": "ex: ZIP DOS" },
+        { "label": "DOUBLURE", "value": "ex: THERMIQUE" }
+      ]
+    },
+    {
+      "id": "coupevent",
+      "name": "Coupe-vent / Vêtement étanche",
+      "note": "TAILLES en plage.",
+      "specsTop": [
+        { "label": "USAGE", "value": "ex: KAYAK / RAFT / SUP" },
+        { "label": "MATIÈRE", "value": "ex: NYLON ENDUIT" },
+        { "label": "ÉTANCHÉITÉ", "value": "ex: ÉTANCHE / DÉPERLANT" },
+        { "label": "COL & MANCHONS", "value": "ex: NÉOPRÈNE" }
+      ],
+      "specsDimensions": [
+        { "label": "TAILLES", "value": "plage, ex: S à XXL" },
+        { "label": "COUTURES", "value": "ex: THERMOSOUDÉES" },
+        { "label": "POIDS", "value": "ex: 450 G" },
+        { "label": "CAPUCHE", "value": "ex: OUI / NON" }
+      ]
+    },
+    {
+      "id": "autre",
+      "name": "Accessoire / Autre",
+      "note": "Catégorie générique (leash, aileron, pompe, chariot, siège, casque...). Choisis les 4 specs les plus pertinentes et comparables pour ce type de produit ; adapte les intitulés ; désactive (enabled:false) les cellules sans information.",
+      "specsTop": [
+        { "label": "USAGE", "value": "à adapter au produit" },
+        { "label": "MATIÈRE", "value": "à adapter" },
+        { "label": "COMPATIBILITÉ", "value": "à adapter" },
+        { "label": "CARACTÉRISTIQUE", "value": "à adapter" }
+      ],
+      "specsDimensions": [
+        { "label": "DIMENSIONS", "value": "à adapter" },
+        { "label": "POIDS", "value": "à adapter" },
+        { "label": "SPEC 3", "value": "à adapter" },
+        { "label": "SPEC 4", "value": "à adapter" }
+      ]
+    }
+  ]
+}

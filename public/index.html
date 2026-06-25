@@ -22,7 +22,10 @@
     <section class="panel">
       <div class="ai-box">
         <h3>⚡ Extraction automatique (IA)</h3>
-        <p class="hint">Collez le lien de la page produit ; l’agent IA extrait les données.</p>
+        <p class="hint">Choisissez la catégorie, collez le lien de la page produit ; l’agent IA extrait les données.</p>
+        <label class="cat-pick">Catégorie de produit
+          <select id="cat-select"></select>
+        </label>
         <input id="producturl" type="url" placeholder="https://www.marque.com/produit/…">
         <button id="extract-btn" class="btn primary full">Extraire &amp; remplir</button>
         <div id="extract-status" class="status"></div>

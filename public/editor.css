@@ -77,6 +77,13 @@ body{
 }
 .ai-box input::placeholder{color:rgba(255,255,255,.7);}
 .ai-box input:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.24);}
+.cat-pick{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:rgba(255,255,255,.9);}
+.cat-pick select{
+  width:100%;padding:11px 12px;border:1px solid rgba(255,255,255,.35);border-radius:9px;
+  font-size:13px;font-weight:600;background:rgba(255,255,255,.16);color:#fff;font-family:inherit;cursor:pointer;
+}
+.cat-pick select option{color:var(--ink);}
+.cat-pick select:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.24);}
 .ai-box .btn.primary{background:#fff;color:#0f6b86;box-shadow:none;}
 .ai-box .btn.primary:hover{background:#f1f6f8;}
 .status{margin-top:9px;font-size:12px;min-height:16px;color:rgba(255,255,255,.95);}

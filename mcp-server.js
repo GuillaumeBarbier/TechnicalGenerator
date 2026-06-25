@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { renderSup, loadSample } = require('./lib/render');
-const { fetchPageText, extractData, providerInfo } = require('./lib/extract');
+const { fetchPageText, extractData, providerInfo, loadCategories } = require('./lib/extract');
 
 const OUT_DIR = path.join(__dirname, 'output');
 
@@ -29,17 +29,36 @@ server.registerTool('get_sup_template', {
   inputSchema: {},
 }, async () => json(loadSample()));
 
+/* 1bis. Catégories de produits disponibles (specs comparables) */
+server.registerTool('list_product_categories', {
+  title: 'Lister les catégories de produits',
+  description:
+    "Retourne la liste des catégories de produits (SUP, kayak, gilet, pagaie, raft, néoprène, coupe-vent, autre) " +
+    "avec, pour chacune, les intitulés de specs figés (specsTop / specsDimensions) garantissant que toutes les " +
+    "fiches d'une même catégorie sont comparables. Choisissez l'id de catégorie à passer à extract_product_data.",
+  inputSchema: {},
+}, async () => json(loadCategories().map(c => ({
+  id: c.id, name: c.name, note: c.note || '',
+  specsTop: c.specsTop.map(s => s.label),
+  specsDimensions: c.specsDimensions.map(s => s.label),
+}))));
+
 /* 2. Extraction depuis une URL produit */
 server.registerTool('extract_product_data', {
   title: 'Extraire les données produit depuis une URL',
   description:
-    "Récupère une page produit et en extrait les caractéristiques au format de la fiche SUP. " +
+    "Récupère une page produit et en extrait les caractéristiques au format de la fiche. " +
+    "Précisez 'category' (voir list_product_categories) pour figer les intitulés et l'ordre des specs, " +
+    "afin que toutes les fiches d'une même catégorie soient comparables ; les infos partielles sont exprimées en plage (ex: 'XS à XXL'). " +
     "Nécessite une clé API (OpenAI ou Anthropic) configurée côté serveur (.env). " +
     "Retourne un objet de données prêt à être passé à generate_sup_fiche.",
-  inputSchema: { url: z.string().url().describe('URL de la page produit') },
-}, async ({ url }) => {
+  inputSchema: {
+    url: z.string().url().describe('URL de la page produit'),
+    category: z.string().optional().describe("id de catégorie (sup, kayak, gilet, pagaie, raft, neoprene, coupevent, autre)"),
+  },
+}, async ({ url, category }) => {
   const { text: pageText, image } = await fetchPageText(url);
-  const data = await extractData(pageText, image);
+  const data = await extractData(pageText, image, category);
   return json(data);
 });
 

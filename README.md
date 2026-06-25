@@ -61,6 +61,7 @@ lib/render.js          Moteur de rendu serveur du template (mustache)
 lib/qr.js              Génération de QR code (SVG -> data URI)
 templates/sup.html     Template SUP (pack en icônes, dégradé pleine page)
 templates/generic.html Template générique (photos d'ambiance + QR, dégradé en bas)
+data/categories.json       Schémas de specs comparables par catégorie de produit
 data/sample-sup.json       Données par défaut du template SUP
 data/sample-generic.json   Données par défaut du template générique
 public/index.html      Interface (formulaire + aperçu)
@@ -92,14 +93,47 @@ Icônes disponibles pour le pack : `leash`, `paddle`, `bag`, `pump`, `fin`, `rep
 
 ---
 
-## Ajouter une nouvelle catégorie de produit
+## Catégories de produits (specs comparables)
 
-1. Dupliquer `templates/sup.html` → `templates/<categorie>.html` et adapter la mise en page.
-2. Créer `data/sample-<categorie>.json` avec les valeurs par défaut.
-3. Adapter le schéma de formulaire dans `public/app.js` (section `SCHEMA` / `buildForm`).
-4. Côté extraction, adapter `SUP_SHAPE` dans `server.js` pour la nouvelle catégorie.
+Pour que **toutes les fiches d'une même catégorie se lisent de la même manière**
+(mêmes intitulés, même ordre, mêmes unités), les specs à extraire sont définies
+par catégorie dans **`data/categories.json`** : SUP, kayak/canoë, gilet, pagaie,
+raft, néoprène, coupe-vent et une catégorie générique « autre ».
 
-> L'architecture est volontairement prévue pour décliner un template par catégorie de produit.
+Chaque catégorie déclare 4 cellules `specsTop` + 4 cellules `specsDimensions`
+(la 1ʳᵉ cellule « référence / nom » est ajoutée automatiquement) :
+
+```json
+{
+  "id": "gilet",
+  "name": "Gilet d'aide à la flottabilité",
+  "note": "Si une donnée varie selon la taille, exprime-la en PLAGE.",
+  "specsTop": [{ "label": "USAGE", "value": "ex: CANOË KAYAK / SUP" }, ...],
+  "specsDimensions": [{ "label": "TAILLES", "value": "plage, ex: XS à XXL" }, ...]
+}
+```
+
+- `label` = intitulé **figé** affiché sur la fiche (garantit la comparabilité).
+- `value` = exemple/indice fourni à l'IA.
+- `note` = consigne IA spécifique (ex. gérer les **plages** quand l'info est partielle :
+  `TAILLES « XS à XXL »`, `FLOTTABILITÉ « 35 à 70N »`).
+
+Dans l'interface, choisissez la catégorie dans l'encart **Extraction IA** avant de
+coller l'URL : l'agent applique alors le schéma de la catégorie. Une cellule sans
+information est désactivée (`enabled:false`) et les autres se recentrent.
+
+**Pour affiner les specs d'une catégorie** (ou en ajouter une) : éditez simplement
+`data/categories.json`, puis relancez le serveur. Le formulaire, l'extraction IA et
+le serveur MCP reprennent automatiquement les nouveaux intitulés.
+
+### Ajouter un nouveau *template* (mise en page)
+
+1. Dupliquer `templates/sup.html` → `templates/<nom>.html` et adapter la mise en page.
+2. Créer `data/sample-<nom>.json` avec les valeurs par défaut.
+3. Enregistrer le template dans `TEMPLATES` (`public/app.js`).
+
+> Les catégories (specs) et les templates (mise en page) sont indépendants :
+> un même template peut servir toutes les catégories.
 
 ---
 
@@ -114,7 +148,8 @@ Outils exposés :
 | Outil | Rôle |
 |---|---|
 | `get_sup_template` | renvoie la structure de données (avec exemple) à remplir |
-| `extract_product_data` | extrait les données depuis une URL produit (clé API requise) |
+| `list_product_categories` | liste les catégories et leurs specs comparables figées |
+| `extract_product_data` | extrait les données depuis une URL produit + `category` (clé API requise) |
 | `generate_sup_fiche` | génère la fiche HTML A4 dans `output/` et renvoie son chemin |
 
 Lancer le serveur MCP (transport stdio) :

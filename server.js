@@ -4,7 +4,7 @@
    ============================================================ */
 const express = require('express');
 const path = require('path');
-const { fetchPageText, extractData, providerInfo } = require('./lib/extract');
+const { fetchPageText, extractData, providerInfo, loadCategories } = require('./lib/extract');
 const { generateQr } = require('./lib/qr');
 const { dominantColorsFromUrl } = require('./lib/colors');
 
@@ -17,19 +17,23 @@ app.use('/templates', express.static(path.join(__dirname, 'templates')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
 
 app.post('/api/extract', async (req, res) => {
-  const { url } = req.body || {};
+  const { url, category } = req.body || {};
   if (!url || !/^https?:\/\//i.test(url)) {
     return res.status(400).json({ error: 'URL invalide.' });
   }
   try {
     const { text, image, gallery } = await fetchPageText(url);
-    const data = await extractData(text, image);
+    const data = await extractData(text, image, category);
     data.gallery = gallery || [];
     try { data.colors = await dominantColorsFromUrl(data.image || image); } catch { data.colors = null; }
     res.json({ data });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+app.get('/api/categories', (_req, res) => {
+  res.json({ categories: loadCategories() });
 });
 
 app.get('/api/colors', async (req, res) => {
