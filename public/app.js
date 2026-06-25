@@ -103,8 +103,6 @@ function render(tpl, data) {
 const SCHEMA = {
   text: [
     { key: 'badge', label: 'Badge (ex: NEW 2026)' },
-    { key: 'name', label: 'Nom du modèle' },
-    { key: 'ref', label: 'Référence' },
   ],
   specsTop: ['PROGRAM', 'TECHNOLOGY', 'LEVEL', 'WEIGHT', 'MAX. LOAD'],
   dims: ['LENGTH', 'WIDTH', 'THICKNESS', 'VOLUME'],
@@ -158,6 +156,26 @@ function colorField(label, value, onset) {
     scheduleRefresh();
   });
   row.append(col, txt); wrap.append(span, row);
+  return wrap;
+}
+
+const READMORE_MAX = 505;
+
+// Champ description avec limite 505 caractères + compteur
+function descriptionField() {
+  const wrap = document.createElement('label');
+  wrap.className = 'fld';
+  const span = document.createElement('span'); span.textContent = 'Texte (max ' + READMORE_MAX + ' caractères)';
+  const ta = document.createElement('textarea');
+  ta.rows = 8; ta.maxLength = READMORE_MAX; ta.value = state.readMore || '';
+  const counter = document.createElement('div');
+  counter.className = 'counter';
+  const update = () => { counter.textContent = (state.readMore || '').length + ' / ' + READMORE_MAX; };
+  ta.addEventListener('input', e => {
+    state.readMore = e.target.value.slice(0, READMORE_MAX);
+    update(); scheduleRefresh();
+  });
+  wrap.append(span, ta, counter); update();
   return wrap;
 }
 
@@ -230,9 +248,9 @@ function buildForm() {
   f.appendChild(colorField('Couleur droite', state.gradientTo, v => state.gradientTo = v));
 
   sec('Description (READ MORE)');
-  f.appendChild(field('Texte', state.readMore, v => state.readMore = v, { area: true }));
+  f.appendChild(descriptionField());
 
-  sec('Caractéristiques bas de page');
+  sec('Points forts');
   state.features.forEach((ft, i) => {
     const box = document.createElement('div'); box.className = 'pairgrp';
     box.appendChild(field('Titre', ft.label, v => state.features[i].label = v));
@@ -322,10 +340,20 @@ async function extractFromUrl() {
 function mergeExtracted(base, ext) {
   if (!ext) return base;
   const out = JSON.parse(JSON.stringify(base));
-  ['brand', 'badge', 'name', 'ref', 'readMore', 'image'].forEach(k => { if (ext[k]) out[k] = ext[k]; });
-  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => { if (out.specsTop[i] && s.value) out.specsTop[i].value = s.value; });
-  if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => { if (out.specsDimensions[i] && s.value) out.specsDimensions[i].value = s.value; });
-  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => { if (out.features[i] && s.value) out.features[i].value = s.value; });
+  ['brand', 'badge', 'image'].forEach(k => { if (ext[k]) out[k] = ext[k]; });
+  if (ext.readMore) out.readMore = String(ext.readMore).slice(0, READMORE_MAX);
+  if (ext.name) out.name = ext.name;
+  // REF (titre) de la première cellule des caractéristiques principales
+  if (ext.ref && out.specsTop[0]) out.specsTop[0].label = ext.ref;
+  // valeurs (on conserve nos titres FR par défaut)
+  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => { if (out.specsTop[i] && s && s.value) out.specsTop[i].value = s.value; });
+  if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => {
+    if (out.specsDimensions[i] && s) {
+      if (s.label) out.specsDimensions[i].label = s.label;
+      if (s.value) out.specsDimensions[i].value = s.value;
+    }
+  });
+  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => { if (out.features[i] && s && s.value) out.features[i].value = s.value; });
   return out;
 }
 

@@ -55,7 +55,7 @@
   /* ---------- Dimensions row ---------- */
   .spec-dims{
     position:absolute;top:226px;left:52px;right:52px;height:70px;
-    display:grid;grid-template-columns:repeat(5,1fr);
+    display:grid;grid-template-columns:repeat(4,1fr);
   }
   .spec-dims .cell{display:flex;flex-direction:column;align-items:center;text-align:center;}
   .spec-dims .lbl{font-size:9px;letter-spacing:0.5px;color:var(--label);margin-bottom:8px;}
@@ -150,10 +150,6 @@
     </div>
 
     <div class="spec-dims">
-      <div class="cell">
-        <div class="lbl">{{ref}}</div>
-        <div class="val">{{name}}</div>
-      </div>
       {{#each specsDimensions}}
       <div class="cell">
         <div class="lbl">{{label}}</div>

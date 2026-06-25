@@ -41,34 +41,34 @@ async function fetchPageText(url) {
   return { text: text.slice(0, 18000), image };
 }
 
-// Structure cible attendue côté front (template SUP).
+// Structure cible attendue côté front (template SUP). Valeurs en MAJUSCULES.
 const SUP_SHAPE = `{
-  "brand": "string (marque)",
-  "badge": "string (ex: NEW 2026, ou vide)",
-  "name": "string (nom du modèle)",
-  "ref": "string (référence, ex: REF. LB 7567)",
+  "brand": "marque (ex: AQUADESIGN)",
+  "badge": "badge (ex: NEW 2026, ou vide)",
+  "name": "nom du modèle (ex: IOTA)",
+  "ref": "référence (ex: REF. LB7567)",
   "specsTop": [
-    {"label":"PROGRAM","value":""},
-    {"label":"TECHNOLOGY","value":""},
-    {"label":"LEVEL","value":""},
-    {"label":"WEIGHT","value":""},
-    {"label":"MAX. LOAD","value":""}
+    {"value": "nom du modèle (identique à name)"},
+    {"value": "niveau (ex: DÉBUTANT INTERMÉDIAIRE)"},
+    {"value": "programme (ex: ALL ROUND)"},
+    {"value": "technologie (ex: DROPSTITCH FUSION)"},
+    {"value": "charge max (ex: JUSQU'À 135 KG)"}
   ],
   "specsDimensions": [
-    {"label":"LENGTH","value":"valeur métrique + impériale ex: 10'0''"},
-    {"label":"WIDTH","value":""},
-    {"label":"THICKNESS","value":""},
-    {"label":"VOLUME","value":""}
+    {"label": "LONGUEUR <cm> cm", "value": "longueur en pieds/pouces (ex: 10')"},
+    {"label": "LARGEUR <cm> cm", "value": "largeur en pouces (ex: 31'')"},
+    {"label": "ÉPAISSEUR <cm> cm", "value": "épaisseur en pouces (ex: 5'')"},
+    {"label": "VOLUME", "value": "volume (ex: 240 L)"}
   ],
   "features": [
-    {"label":"SUP FIN","value":""},
-    {"label":"CROCO EVA PAD","value":""},
-    {"label":"INCLUDED PACK","value":""},
-    {"label":"FUSION DROPSTITCH","value":""},
-    {"label":"HIGH-STRENGTH NET","value":""}
+    {"value": "point fort 1"},
+    {"value": "point fort 2"},
+    {"value": "point fort 3"},
+    {"value": "point fort 4"},
+    {"value": "point fort 5"}
   ],
-  "readMore": "string (description marketing)",
-  "image": "string (URL absolue du visuel principal, ou vide)"
+  "readMore": "description marketing en MAJUSCULES, 505 caractères MAXIMUM (espaces compris)",
+  "image": "URL absolue du visuel principal, ou vide"
 }`;
 
 async function extractWithClaude(pageText, fallbackImage) {
@@ -83,8 +83,10 @@ async function extractWithClaude(pageText, fallbackImage) {
   const system =
     "Tu es un assistant qui extrait les caractéristiques d'un Stand-Up Paddle (SUP) " +
     "depuis le contenu texte d'une page produit. Renseigne au mieux la structure JSON demandée. " +
-    "Garde les valeurs courtes et en majuscules comme sur une fiche technique. " +
-    "Pour les dimensions, combine métrique et impérial si disponibles. " +
+    "Garde les valeurs courtes et EN MAJUSCULES comme sur une fiche technique. " +
+    "Pour les dimensions, mets la valeur métrique (cm) dans le label et l'impérial dans value. " +
+    "Le champ readMore est une description marketing EN MAJUSCULES limitée à 505 caractères MAXIMUM (espaces compris) — résume si besoin. " +
+    "Pour features, donne 5 points forts courts. " +
     "Laisse une valeur vide ('') si l'information est introuvable. Réponds UNIQUEMENT par le JSON.";
 
   const user =
@@ -102,6 +104,7 @@ async function extractWithClaude(pageText, fallbackImage) {
   const json = txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1);
   const data = JSON.parse(json);
   if (!data.image && fallbackImage) data.image = fallbackImage;
+  if (typeof data.readMore === 'string') data.readMore = data.readMore.slice(0, 505);
   return data;
 }
 

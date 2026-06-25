@@ -1,20 +1,47 @@
 {
   "brand": "AQUADESIGN",
   "badge": "NEW 2026",
-  "name": "IOTA",
-  "ref": "REF. LB 7567",
+  "name": "NOM",
+  "ref": "REF. LBXXXX",
   "specsTop": [
-    { "label": "PROGRAM", "value": "ALL ROUND" },
-    { "label": "TECHNOLOGY", "value": "FUSION\nDROPSTITCH" },
-    { "label": "LEVEL", "value": "BEGINNER\nINTERMEDIATE" },
-    { "label": "WEIGHT", "value": "7.3 KG" },
-    { "label": "MAX. LOAD", "value": "UP TO 135 KG" }
+    {
+      "label": "REF. LBXXXX",
+      "value": "NOM"
+    },
+    {
+      "label": "NIVEAU",
+      "value": "DÉBUTANT\nINTERMÉDIAIRE"
+    },
+    {
+      "label": "PROGRAMME",
+      "value": "ALL ROUND"
+    },
+    {
+      "label": "TECHNOLOGIE",
+      "value": "DROPSTITCH\nFUSION"
+    },
+    {
+      "label": "CHARGE MAX.",
+      "value": "JUSQU'À XXX KG"
+    }
   ],
   "specsDimensions": [
-    { "label": "LENGTH 305 cm", "value": "10'0''" },
-    { "label": "WIDTH 79 cm", "value": "31''" },
-    { "label": "THICKNESS 13 cm", "value": "5''" },
-    { "label": "VOLUME", "value": "240 L" }
+    {
+      "label": "LONGUEUR XXX cm",
+      "value": "XX'X"
+    },
+    {
+      "label": "LARGEUR XX cm",
+      "value": "XX''"
+    },
+    {
+      "label": "ÉPAISSEUR XX cm",
+      "value": "X''"
+    },
+    {
+      "label": "VOLUME",
+      "value": "XXX L"
+    }
   ],
   "image": "",
   "whiteBg": false,
@@ -22,19 +49,63 @@
   "gradientTo": "#787878",
   "packTitle": "INCLUDED SUP PACK",
   "pack": [
-    { "icon": "leash", "label": "SUP LEASH", "image": "" },
-    { "icon": "paddle", "label": "SUP PADDLE", "image": "" },
-    { "icon": "bag", "label": "SUP BAG", "image": "" },
-    { "icon": "pump", "label": "SUP PUMP", "image": "" },
-    { "icon": "fin", "label": "SUP FIN", "sub": "REF. LB 7580", "image": "" },
-    { "icon": "repair", "label": "REPAIR KIT", "image": "" }
+    {
+      "label": "ACCESSOIRE 1",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    },
+    {
+      "label": "ACCESSOIRE 2",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    },
+    {
+      "label": "ACCESSOIRE 3",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    },
+    {
+      "label": "ACCESSOIRE 4",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    },
+    {
+      "label": "ACCESSOIRE 5",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    },
+    {
+      "label": "ACCESSOIRE 6",
+      "sub": "REF. XX XXXX",
+      "image": ""
+    }
   ],
-  "readMore": "ALWAYS READY TO PROVIDE THE BEST SOLUTIONS TO PROFESSIONALS, WE DECIDED THIS YEAR TO LAUNCH TWO NEW MODELS, SPECIALLY DEDICATED TO « SCHOOLS ». THE IOTA AND SIGMA BOARDS ARE REINFORCED BOTH WITH A ROBUST CONSTRUCTION AND EXTRA FEATURES, PARTICULARLY DESIGNED FOR THE INTENSIVE USE OF THE PROFESSIONALS. WITH ITS 10' AND ITS FUSION DROPSTITCH COMPOSITION, THE IOTA BOARD WILL OFFER YOU GREAT GLIDING SENSATIONS WITH A MAXIMUM OF RESPONSIVENESS.",
+  "readMore": "DÉCRIVEZ ICI LE PRODUIT : SES ATOUTS, SA CONSTRUCTION, SES MATÉRIAUX ET SES SENSATIONS DE GLISSE. CE TEXTE EST LIMITÉ À 505 CARACTÈRES, ESPACES COMPRIS, ET DOIT RESTER EN MAJUSCULES POUR RESPECTER LA CHARTE GRAPHIQUE. LORSQUE VOUS COLLEZ L'URL D'UNE PAGE PRODUIT, L'AGENT IA EXTRAIT ET REMPLIT AUTOMATIQUEMENT CE BLOC AVEC LA DESCRIPTION OFFICIELLE DE LA MARQUE. PERSONNALISEZ-LE ENSUITE SELON VOS BESOINS POUR METTRE EN AVANT LES POINTS FORTS ET LES BÉNÉFICES CLÉS DE CE MODÈLE AUPRÈS DE VOS CLIENTS ET D",
   "features": [
-    { "label": "SUP FIN", "value": "1" },
-    { "label": "CROCO EVA PAD", "value": "COMFORT" },
-    { "label": "INCLUDED PACK", "value": "YES" },
-    { "label": "FUSION DROPSTITCH", "value": "FUSION", "boxed": true },
-    { "label": "HIGH-STRENGTH NET", "value": "", "check": true }
+    {
+      "label": "Point Fort 1",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 2",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 3",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 4",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 5",
+      "value": "VALEUR",
+      "check": false
+    }
   ]
 }
