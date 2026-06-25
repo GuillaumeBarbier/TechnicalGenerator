@@ -60,8 +60,8 @@ body{
 /* ---------- AI box ---------- */
 .ai-box{
   position:relative;border-radius:14px;padding:16px;margin-bottom:22px;color:#fff;
-  background:linear-gradient(135deg,#17b3c4 0%,#1796c4 55%,#3a6ff0 100%);
-  box-shadow:0 10px 24px rgba(23,150,196,.28);
+  background:#08C6D2;
+  box-shadow:0 10px 24px rgb(0 0 0 / 28%);
 }
 .ai-box h3{margin:0 0 4px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px;}
 .ai-box .hint{margin:0 0 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.9);}
