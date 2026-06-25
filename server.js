@@ -30,6 +30,22 @@ app.post('/api/extract', async (req, res) => {
   }
 });
 
+// Proxy d'image (renvoie une data URL) -> permet l'analyse couleur côté client sans CORS.
+app.get('/api/fetch-image', async (req, res) => {
+  try {
+    const u = String(req.query.url || '');
+    if (!/^https?:\/\//i.test(u)) return res.status(400).json({ error: 'URL invalide.' });
+    const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (FicheTechniqueBot/1.0)' } });
+    if (!r.ok) return res.status(502).json({ error: 'HTTP ' + r.status });
+    const ct = r.headers.get('content-type') || 'image/jpeg';
+    if (!/^image\//i.test(ct)) return res.status(415).json({ error: 'Pas une image.' });
+    const buf = Buffer.from(await r.arrayBuffer());
+    res.json({ dataUrl: `data:${ct};base64,` + buf.toString('base64') });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/api/qr', async (req, res) => {
   try {
     res.json({ qr: await generateQr(req.query.text || '') });

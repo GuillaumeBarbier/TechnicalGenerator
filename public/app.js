@@ -264,6 +264,17 @@ function buildForm() {
   sec('Couleurs du dégradé');
   f.appendChild(colorField('Couleur gauche', state.gradientFrom, v => state.gradientFrom = v));
   f.appendChild(colorField('Couleur droite', state.gradientTo, v => state.gradientTo = v));
+  const autoBtn = document.createElement('button');
+  autoBtn.type = 'button'; autoBtn.className = 'btn ghost full';
+  autoBtn.textContent = '🎨 Couleurs auto depuis le visuel';
+  autoBtn.addEventListener('click', async () => {
+    autoBtn.disabled = true;
+    const ok = await autoGradientFromImage();
+    autoBtn.disabled = false;
+    if (ok) { buildForm(); refresh(); }
+    else autoBtn.textContent = 'Aucune couleur détectée — ajoute d’abord un visuel';
+  });
+  f.appendChild(autoBtn);
 
   sec('Description (READ MORE)');
   f.appendChild(descriptionField());
@@ -320,6 +331,7 @@ function imageUploadField(key, label, opts = {}) {
     const fl = e.target.files[0]; if (!fl) return;
     state[key] = await fileToDataUrl(fl);
     if (opts.detectWhiteBg) state.whiteBg = /jpe?g/i.test(fl.type);
+    if (key === 'image') await autoGradientFromImage();
     buildForm(); refresh();
   });
   wrap.append(span, fin);
@@ -332,6 +344,63 @@ function imageUploadField(key, label, opts = {}) {
     row.append(im, del); wrap.append(row);
   }
   return wrap;
+}
+
+/* ---------- Couleurs auto du dégradé (analyse de la 1ʳᵉ photo) ---------- */
+async function imageToDataUrl(src) {
+  if (!src) return '';
+  if (src.startsWith('data:')) return src;
+  try {
+    const r = await fetch('/api/fetch-image?url=' + encodeURIComponent(src));
+    return (await r.json()).dataUrl || '';
+  } catch { return ''; }
+}
+
+const toHex = c => '#' + [c.r, c.g, c.b].map(x => Math.max(0, Math.min(255, x)).toString(16).padStart(2, '0')).join('');
+const darken = (c, f) => ({ r: Math.round(c.r * f), g: Math.round(c.g * f), b: Math.round(c.b * f) });
+const colDist = (a, b) => Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
+
+function dominantColors(dataUrl) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const W = 64, H = Math.max(1, Math.round(64 * img.height / (img.width || 1)));
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
+      const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, W, H);
+      let data; try { data = ctx.getImageData(0, 0, W, H).data; } catch { resolve(null); return; }
+      const buckets = {};
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+        if (a < 200) continue;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b), sat = max - min;
+        if (max > 235 && sat < 18) continue;   // quasi-blanc (fond)
+        if (max < 25) continue;                 // quasi-noir
+        if (sat < 22) continue;                 // gris/neutre
+        const key = ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
+        const bk = buckets[key] || (buckets[key] = { count: 0, r: 0, g: 0, b: 0 });
+        bk.count++; bk.r += r; bk.g += g; bk.b += b;
+      }
+      const arr = Object.values(buckets)
+        .map(b => ({ count: b.count, r: Math.round(b.r / b.count), g: Math.round(b.g / b.count), b: Math.round(b.b / b.count) }))
+        .sort((a, b) => b.count - a.count);
+      if (!arr.length) { resolve(null); return; }
+      const c1 = arr[0];
+      let c2 = arr.find((c, i) => i > 0 && colDist(c, c1) > 70) || darken(c1, 0.55);
+      resolve([toHex(c1), toHex(c2)]);
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
+}
+
+async function autoGradientFromImage() {
+  const du = await imageToDataUrl(state.image);
+  if (!du) return false;
+  const cols = await dominantColors(du);
+  if (!cols) return false;
+  state.gradientFrom = cols[0];
+  state.gradientTo = cols[1];
+  return true;
 }
 
 // QR code généré depuis l'URL produit (débounce -> /api/qr)
@@ -389,6 +458,7 @@ async function extractFromUrl() {
         if (data.data.gallery[1]) state.image3 = data.data.gallery[1];
       }
     }
+    await autoGradientFromImage(); // dégradé auto depuis la photo principale
     buildForm(); refresh();
     if (tplId === 'generic') generateQrFromUrl();
     status.textContent = '✅ Données extraites. Vérifiez et ajustez si besoin.';
