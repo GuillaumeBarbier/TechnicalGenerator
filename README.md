@@ -54,11 +54,14 @@ Pour un déploiement (serveur/hébergeur), définissez ces variables dans l'envi
 ## Structure
 
 ```
-server.js              Serveur Express + endpoint /api/extract (récupère la page, appelle Claude)
-templates/sup.html     Template A4 du SUP, avec variables {{…}}, boucles {{#each}}, icônes SVG
-data/sample-sup.json   Données d'exemple (la planche IOTA) + schéma de données
+server.js              Serveur web Express (éditeur + endpoint /api/extract)
+mcp-server.js          Serveur MCP (outils pour piloter le générateur depuis une IA)
+lib/extract.js         Extraction IA partagée (OpenAI / Anthropic) + chargement .env
+lib/render.js          Moteur de rendu serveur du template (mustache)
+templates/sup.html     Template A4 du SUP, avec variables {{…}}, boucles {{#each}}
+data/sample-sup.json   Données d'exemple/par défaut + schéma de données
 public/index.html      Interface (formulaire + aperçu)
-public/app.js          Moteur de rendu des variables + formulaire + impression + appel IA
+public/app.js          Rendu des variables + formulaire + impression + appel IA (front)
 public/editor.css      Styles de l'interface
 ```
 
@@ -94,6 +97,50 @@ Icônes disponibles pour le pack : `leash`, `paddle`, `bag`, `pump`, `fin`, `rep
 4. Côté extraction, adapter `SUP_SHAPE` dans `server.js` pour la nouvelle catégorie.
 
 > L'architecture est volontairement prévue pour décliner un template par catégorie de produit.
+
+---
+
+## Accès MCP (piloter le générateur depuis une IA)
+
+Le projet expose un **serveur MCP** (Model Context Protocol) : une IA compatible
+(Claude Desktop, Claude Code, etc.) peut générer des fiches techniques en appelant
+directement des outils.
+
+Outils exposés :
+
+| Outil | Rôle |
+|---|---|
+| `get_sup_template` | renvoie la structure de données (avec exemple) à remplir |
+| `extract_product_data` | extrait les données depuis une URL produit (clé API requise) |
+| `generate_sup_fiche` | génère la fiche HTML A4 dans `output/` et renvoie son chemin |
+
+Lancer le serveur MCP (transport stdio) :
+
+```bash
+npm run mcp
+```
+
+### Connecter Claude Desktop (exemple)
+
+Dans le fichier de config MCP du client (`claude_desktop_config.json`), ajoutez :
+
+```json
+{
+  "mcpServers": {
+    "fiches-techniques": {
+      "command": "node",
+      "args": ["/chemin/absolu/vers/TechnicalGenerator/mcp-server.js"],
+      "env": {
+        "OPENAI_API_KEY": "sk-..."
+      }
+    }
+  }
+}
+```
+
+> La clé API peut être fournie ici (`env`) **ou** via le fichier `.env` du projet.
+> L'IA peut alors enchaîner : `extract_product_data(url)` → ajuste les données →
+> `generate_sup_fiche(data)` → ouvre le HTML produit dans `output/`.
 
 ---
 
