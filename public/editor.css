@@ -123,8 +123,13 @@ body{
 .colorrow{display:flex;gap:9px;align-items:center;}
 .colorrow input[type=color]{
   width:44px;height:38px;padding:0;border:1px solid var(--line);border-radius:9px;
-  background:#fff;cursor:pointer;box-shadow:var(--shadow-sm);
+  background:#fff;cursor:pointer;box-shadow:var(--shadow-sm);overflow:hidden;
+  -webkit-appearance:none;appearance:none;transition:border-color .15s ease,box-shadow .15s ease;
 }
+.colorrow input[type=color]:hover{border-color:var(--line-strong);}
+.colorrow input[type=color]::-webkit-color-swatch-wrapper{padding:3px;}
+.colorrow input[type=color]::-webkit-color-swatch{border:none;border-radius:6px;}
+.colorrow input[type=color]::-moz-color-swatch{border:none;border-radius:6px;}
 .colorrow .hexin{flex:1;text-transform:uppercase;}
 
 /* ---------- Misc ---------- */
