@@ -99,24 +99,27 @@ function render(tpl, data) {
   return renderNodes(parse(tokenize(tpl)), data, data);
 }
 
-/* ---------- Schéma du formulaire SUP ---------- */
-const SCHEMA = {
-  text: [
-    { key: 'badge', label: 'Badge (ex: NEW 2026)' },
-  ],
-  specsTop: ['PROGRAM', 'TECHNOLOGY', 'LEVEL', 'WEIGHT', 'MAX. LOAD'],
-  dims: ['LENGTH', 'WIDTH', 'THICKNESS', 'VOLUME'],
+/* ---------- Templates ---------- */
+const TEMPLATES = {
+  sup:     { name: 'SUP — pack (icônes)',     file: '/templates/sup.html',     sample: '/data/sample-sup.json' },
+  generic: { name: 'Générique — photos + QR', file: '/templates/generic.html', sample: '/data/sample-generic.json' },
 };
 
+const SCHEMA = { text: [{ key: 'badge', label: 'Badge (ex: NEW 2026)' }] };
+
+let tplId = 'sup';
 let state = null;
 let templateHtml = '';
 
-async function boot() {
-  templateHtml = await fetch('/templates/sup.html').then(r => r.text());
-  state = await fetch('/data/sample-sup.json').then(r => r.json());
+async function loadTemplate(id) {
+  if (TEMPLATES[id]) tplId = id;
+  templateHtml = await fetch(TEMPLATES[tplId].file).then(r => r.text());
+  state = await fetch(TEMPLATES[tplId].sample).then(r => r.json());
   buildForm();
   refresh();
 }
+
+const boot = () => loadTemplate(tplId);
 
 /* ---------- Construction du formulaire ---------- */
 function field(label, value, oninput, opts = {}) {
@@ -212,43 +215,51 @@ function buildForm() {
       s.label, v => state.specsDimensions[i].label = v,
       s.value, v => state.specsDimensions[i].value = v)));
 
-  sec('Visuel produit');
+  sec(tplId === 'generic' ? 'Visuel produit principal' : 'Visuel produit');
   f.appendChild(field('URL ou base64 de l’image', state.image, v => state.image = v));
-  const file = document.createElement('input');
-  file.type = 'file'; file.accept = 'image/*'; file.className = 'filein';
-  file.addEventListener('change', async e => {
-    const fl = e.target.files[0]; if (!fl) return;
-    state.image = await fileToDataUrl(fl);
-    state.whiteBg = /jpe?g/i.test(fl.type); // JPG = fond blanc, PNG = transparent
-    buildForm(); refresh();
-  });
-  f.appendChild(file);
+  f.appendChild(imageUploadField('image', 'Importer l’image (.png/.jpg)', { detectWhiteBg: tplId === 'sup' }));
 
-  const bgWrap = document.createElement('label');
-  bgWrap.className = 'fld chk-fld';
-  const cb = document.createElement('input');
-  cb.type = 'checkbox'; cb.checked = !!state.whiteBg;
-  cb.addEventListener('change', e => { state.whiteBg = e.target.checked; refresh(); });
-  const cbt = document.createElement('span');
-  cbt.textContent = 'Visuel sur fond blanc (JPG) — dégradé sous le footer';
-  bgWrap.append(cb, cbt);
-  f.appendChild(bgWrap);
+  if (tplId === 'sup') {
+    const bgWrap = document.createElement('label'); bgWrap.className = 'fld chk-fld';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!state.whiteBg;
+    cb.addEventListener('change', e => { state.whiteBg = e.target.checked; refresh(); });
+    const cbt = document.createElement('span'); cbt.textContent = 'Visuel sur fond blanc (JPG) — dégradé sous le footer';
+    bgWrap.append(cb, cbt); f.appendChild(bgWrap);
+  }
 
-  sec('Pack inclus');
-  f.appendChild(field('Intitulé du pack (label vertical)', state.packTitle, v => state.packTitle = v));
-  state.pack.forEach((p, i) => {
-    const on = p.enabled !== false;
-    const box = document.createElement('div'); box.className = 'pairgrp' + (on ? '' : ' disabled');
-    const tog = document.createElement('label'); tog.className = 'fld chk-fld';
-    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = on;
-    cb.addEventListener('change', e => { state.pack[i].enabled = e.target.checked; buildForm(); refresh(); });
-    const tt = document.createElement('span'); tt.textContent = 'Afficher cet élément';
-    tog.append(cb, tt); box.appendChild(tog);
-    box.appendChild(field('Élément ' + (i + 1), p.label, v => state.pack[i].label = v));
-    box.appendChild(field('Sous-texte', p.sub || '', v => state.pack[i].sub = v));
-    box.appendChild(packImageField(i, p));
-    f.appendChild(box);
-  });
+  if (tplId === 'generic') {
+    sec('Photos d’ambiance');
+    f.appendChild(field('URL/base64 photo 1', state.image2, v => state.image2 = v));
+    f.appendChild(imageUploadField('image2', 'Importer la photo 1 (.png/.jpg)'));
+    f.appendChild(field('URL/base64 photo 2', state.image3, v => state.image3 = v));
+    f.appendChild(imageUploadField('image3', 'Importer la photo 2 (.png/.jpg)'));
+
+    sec('QR code');
+    const w = document.createElement('label'); w.className = 'fld chk-fld';
+    const cbq = document.createElement('input'); cbq.type = 'checkbox'; cbq.checked = state.showQr !== false;
+    cbq.addEventListener('change', e => { state.showQr = e.target.checked; refresh(); });
+    const sq = document.createElement('span'); sq.textContent = 'Afficher le QR code';
+    w.append(cbq, sq); f.appendChild(w);
+    f.appendChild(field('URL de la page produit (QR)', state.productUrl, v => { state.productUrl = v; scheduleQr(); }));
+  }
+
+  if (tplId === 'sup') {
+    sec('Pack inclus');
+    f.appendChild(field('Intitulé du pack (label vertical)', state.packTitle, v => state.packTitle = v));
+    state.pack.forEach((p, i) => {
+      const on = p.enabled !== false;
+      const box = document.createElement('div'); box.className = 'pairgrp' + (on ? '' : ' disabled');
+      const tog = document.createElement('label'); tog.className = 'fld chk-fld';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = on;
+      cb.addEventListener('change', e => { state.pack[i].enabled = e.target.checked; buildForm(); refresh(); });
+      const tt = document.createElement('span'); tt.textContent = 'Afficher cet élément';
+      tog.append(cb, tt); box.appendChild(tog);
+      box.appendChild(field('Élément ' + (i + 1), p.label, v => state.pack[i].label = v));
+      box.appendChild(field('Sous-texte', p.sub || '', v => state.pack[i].sub = v));
+      box.appendChild(packImageField(i, p));
+      f.appendChild(box);
+    });
+  }
 
   sec('Couleurs du dégradé');
   f.appendChild(colorField('Couleur gauche', state.gradientFrom, v => state.gradientFrom = v));
@@ -300,6 +311,42 @@ function fileToDataUrl(file) {
   return new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
 }
 
+// Upload d'image vers une clé de state (+ vignette + retrait)
+function imageUploadField(key, label, opts = {}) {
+  const wrap = document.createElement('div'); wrap.className = 'fld';
+  const span = document.createElement('span'); span.textContent = label || 'Importer une image (.png/.jpg)';
+  const fin = document.createElement('input'); fin.type = 'file'; fin.accept = 'image/*'; fin.className = 'filein';
+  fin.addEventListener('change', async e => {
+    const fl = e.target.files[0]; if (!fl) return;
+    state[key] = await fileToDataUrl(fl);
+    if (opts.detectWhiteBg) state.whiteBg = /jpe?g/i.test(fl.type);
+    buildForm(); refresh();
+  });
+  wrap.append(span, fin);
+  if (state[key]) {
+    const row = document.createElement('div'); row.className = 'thumbrow';
+    const im = document.createElement('img'); im.src = state[key]; im.className = 'thumb';
+    const del = document.createElement('button');
+    del.type = 'button'; del.textContent = '✕ retirer'; del.className = 'btn ghost tiny';
+    del.addEventListener('click', () => { state[key] = ''; buildForm(); refresh(); });
+    row.append(im, del); wrap.append(row);
+  }
+  return wrap;
+}
+
+// QR code généré depuis l'URL produit (débounce -> /api/qr)
+let qrTimer = null;
+function scheduleQr() { clearTimeout(qrTimer); qrTimer = setTimeout(generateQrFromUrl, 500); }
+async function generateQrFromUrl() {
+  const url = (state.productUrl || '').trim();
+  if (!url) { state.qr = ''; refresh(); return; }
+  try {
+    const r = await fetch('/api/qr?text=' + encodeURIComponent(url));
+    state.qr = (await r.json()).qr || '';
+  } catch { /* ignore */ }
+  refresh();
+}
+
 /* ---------- Aperçu ---------- */
 let refreshTimer = null;
 function scheduleRefresh() { clearTimeout(refreshTimer); refreshTimer = setTimeout(refresh, 250); }
@@ -335,7 +382,15 @@ async function extractFromUrl() {
     if (!res.ok) throw new Error(data.error || 'Erreur serveur');
     // fusion : on garde la structure, on remplace les valeurs trouvées
     state = mergeExtracted(state, data.data);
+    if (tplId === 'generic') {
+      state.productUrl = url;
+      if (Array.isArray(data.data.gallery)) {
+        if (data.data.gallery[0]) state.image2 = data.data.gallery[0];
+        if (data.data.gallery[1]) state.image3 = data.data.gallery[1];
+      }
+    }
     buildForm(); refresh();
+    if (tplId === 'generic') generateQrFromUrl();
     status.textContent = '✅ Données extraites. Vérifiez et ajustez si besoin.';
   } catch (e) {
     status.textContent = '❌ ' + e.message;
@@ -363,7 +418,7 @@ function mergeExtracted(base, ext) {
     if (typeof s.check === 'boolean') dst.check = s.check;
     if (dst.check) dst.value = ''; else if (s.value) dst.value = s.value;
   });
-  if (Array.isArray(ext.pack)) ext.pack.forEach((s, i) => {
+  if (Array.isArray(ext.pack) && Array.isArray(out.pack)) ext.pack.forEach((s, i) => {
     const dst = out.pack[i]; if (!dst || !s) return;
     if (s.label) dst.label = s.label;
     if (typeof s.sub === 'string') dst.sub = s.sub;
@@ -373,11 +428,18 @@ function mergeExtracted(base, ext) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('tpl-select');
+  Object.entries(TEMPLATES).forEach(([id, t]) => {
+    const o = document.createElement('option'); o.value = id; o.textContent = t.name; sel.appendChild(o);
+  });
+  sel.value = tplId;
+  sel.addEventListener('change', e => loadTemplate(e.target.value));
+
   boot();
   document.getElementById('print-btn').addEventListener('click', printSheet);
   document.getElementById('extract-btn').addEventListener('click', extractFromUrl);
   document.getElementById('reset-btn').addEventListener('click', async () => {
-    state = await fetch('/data/sample-sup.json').then(r => r.json());
+    state = await fetch(TEMPLATES[tplId].sample).then(r => r.json());
     buildForm(); refresh();
   });
 });

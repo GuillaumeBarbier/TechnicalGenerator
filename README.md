@@ -56,10 +56,13 @@ Pour un déploiement (serveur/hébergeur), définissez ces variables dans l'envi
 ```
 server.js              Serveur web Express (éditeur + endpoint /api/extract)
 mcp-server.js          Serveur MCP (outils pour piloter le générateur depuis une IA)
-lib/extract.js         Extraction IA partagée (OpenAI / Anthropic) + chargement .env
+lib/extract.js         Extraction IA partagée (OpenAI / Anthropic) + galerie + .env
 lib/render.js          Moteur de rendu serveur du template (mustache)
-templates/sup.html     Template A4 du SUP, avec variables {{…}}, boucles {{#each}}
-data/sample-sup.json   Données d'exemple/par défaut + schéma de données
+lib/qr.js              Génération de QR code (SVG -> data URI)
+templates/sup.html     Template SUP (pack en icônes, dégradé pleine page)
+templates/generic.html Template générique (photos d'ambiance + QR, dégradé en bas)
+data/sample-sup.json       Données par défaut du template SUP
+data/sample-generic.json   Données par défaut du template générique
 public/index.html      Interface (formulaire + aperçu)
 public/app.js          Rendu des variables + formulaire + impression + appel IA (front)
 public/editor.css      Styles de l'interface

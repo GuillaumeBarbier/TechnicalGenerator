@@ -5,6 +5,7 @@
 const express = require('express');
 const path = require('path');
 const { fetchPageText, extractData, providerInfo } = require('./lib/extract');
+const { generateQr } = require('./lib/qr');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,9 +21,18 @@ app.post('/api/extract', async (req, res) => {
     return res.status(400).json({ error: 'URL invalide.' });
   }
   try {
-    const { text, image } = await fetchPageText(url);
+    const { text, image, gallery } = await fetchPageText(url);
     const data = await extractData(text, image);
+    data.gallery = gallery || [];
     res.json({ data });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/qr', async (req, res) => {
+  try {
+    res.json({ qr: await generateQr(req.query.text || '') });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

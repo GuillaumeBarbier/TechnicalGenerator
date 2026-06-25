@@ -1,0 +1,82 @@
+{
+  "brand": "AQUADESIGN",
+  "badge": "NEW 2026",
+  "name": "NOM",
+  "ref": "REF. LBXXXX",
+  "specsTop": [
+    {
+      "label": "REF. LBXXXX",
+      "value": "NOM"
+    },
+    {
+      "label": "PROGRAMME",
+      "value": "ALL ROUND"
+    },
+    {
+      "label": "NIVEAU",
+      "value": "DÉBUTANT\nINTERMÉDIAIRE"
+    },
+    {
+      "label": "TECHNOLOGIE",
+      "value": "DROPSTITCH\nFUSION"
+    },
+    {
+      "label": "CHARGE MAX.",
+      "value": "JUSQU'À XXX KG"
+    }
+  ],
+  "specsDimensions": [
+    {
+      "label": "LONGUEUR XXX cm",
+      "value": "XX'X"
+    },
+    {
+      "label": "LARGEUR XX cm",
+      "value": "XX''"
+    },
+    {
+      "label": "ÉPAISSEUR XX cm",
+      "value": "X''"
+    },
+    {
+      "label": "VOLUME",
+      "value": "XXX L"
+    }
+  ],
+  "image": "",
+  "image2": "",
+  "image3": "",
+  "gradientFrom": "#292929",
+  "gradientTo": "#787878",
+  "readMore": "DÉCRIVEZ ICI LE PRODUIT : SES ATOUTS, SA CONSTRUCTION, SES MATÉRIAUX ET SES SENSATIONS DE GLISSE. CE TEXTE EST LIMITÉ À 505 CARACTÈRES, ESPACES COMPRIS, ET DOIT RESTER EN MAJUSCULES POUR RESPECTER LA CHARTE GRAPHIQUE. LORSQUE VOUS COLLEZ L'URL D'UNE PAGE PRODUIT, L'AGENT IA EXTRAIT ET REMPLIT AUTOMATIQUEMENT CE BLOC AVEC LA DESCRIPTION OFFICIELLE DE LA MARQUE. PERSONNALISEZ-LE ENSUITE SELON VOS BESOINS POUR METTRE EN AVANT LES POINTS FORTS ET LES BÉNÉFICES CLÉS DE CE MODÈLE AUPRÈS DE VOS CLIENTS ET D",
+  "productUrl": "",
+  "showQr": true,
+  "qr": "",
+  "features": [
+    {
+      "label": "Point Fort 1",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 2",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 3",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 4",
+      "value": "VALEUR",
+      "check": false
+    },
+    {
+      "label": "Point Fort 5",
+      "value": "VALEUR",
+      "check": false
+    }
+  ]
+}
