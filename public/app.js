@@ -125,7 +125,7 @@ function field(label, value, oninput, opts = {}) {
   const span = document.createElement('span');
   span.textContent = label;
   const input = opts.area ? document.createElement('textarea') : document.createElement('input');
-  if (opts.area) input.rows = 5;
+  if (opts.area) input.rows = opts.rows || 5;
   input.value = value ?? '';
   input.addEventListener('input', e => { oninput(e.target.value); scheduleRefresh(); });
   wrap.append(span, input);
@@ -203,7 +203,8 @@ function buildForm() {
   state.specsTop.forEach((s, i) =>
     f.appendChild(twoFields(
       s.label, v => state.specsTop[i].label = v,
-      s.value, v => state.specsTop[i].value = v)));
+      s.value, v => state.specsTop[i].value = v,
+      { area: true, rows: 2 })));
 
   sec('Dimensions');
   state.specsDimensions.forEach((s, i) =>
@@ -349,13 +350,25 @@ function mergeExtracted(base, ext) {
   ['brand', 'badge', 'image'].forEach(k => { if (ext[k]) out[k] = ext[k]; });
   if (ext.readMore) out.readMore = String(ext.readMore).slice(0, READMORE_MAX);
   if (ext.name) out.name = ext.name;
+  if (typeof ext.whiteBg === 'boolean') out.whiteBg = ext.whiteBg;
   // REF (titre) de la première cellule des caractéristiques principales
   if (ext.ref && out.specsTop[0]) out.specsTop[0].label = ext.ref;
   // L'IA peut substituer titre ET valeur si l'info attendue est absente
   const mergeCell = (dst, s) => { if (!dst || !s) return; if (s.label) dst.label = s.label; if (s.value) dst.value = s.value; };
   if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => mergeCell(out.specsTop[i], s));
   if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => mergeCell(out.specsDimensions[i], s));
-  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => mergeCell(out.features[i], s));
+  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => {
+    const dst = out.features[i]; if (!dst || !s) return;
+    if (s.label) dst.label = s.label;
+    if (typeof s.check === 'boolean') dst.check = s.check;
+    if (dst.check) dst.value = ''; else if (s.value) dst.value = s.value;
+  });
+  if (Array.isArray(ext.pack)) ext.pack.forEach((s, i) => {
+    const dst = out.pack[i]; if (!dst || !s) return;
+    if (s.label) dst.label = s.label;
+    if (typeof s.sub === 'string') dst.sub = s.sub;
+    if (typeof s.enabled === 'boolean') dst.enabled = s.enabled;
+  });
   return out;
 }
 
