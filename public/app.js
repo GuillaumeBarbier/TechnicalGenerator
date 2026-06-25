@@ -236,7 +236,13 @@ function buildForm() {
   sec('Pack inclus');
   f.appendChild(field('Intitulé du pack (label vertical)', state.packTitle, v => state.packTitle = v));
   state.pack.forEach((p, i) => {
-    const box = document.createElement('div'); box.className = 'pairgrp';
+    const on = p.enabled !== false;
+    const box = document.createElement('div'); box.className = 'pairgrp' + (on ? '' : ' disabled');
+    const tog = document.createElement('label'); tog.className = 'fld chk-fld';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = on;
+    cb.addEventListener('change', e => { state.pack[i].enabled = e.target.checked; buildForm(); refresh(); });
+    const tt = document.createElement('span'); tt.textContent = 'Afficher cet élément';
+    tog.append(cb, tt); box.appendChild(tog);
     box.appendChild(field('Élément ' + (i + 1), p.label, v => state.pack[i].label = v));
     box.appendChild(field('Sous-texte', p.sub || '', v => state.pack[i].sub = v));
     box.appendChild(packImageField(i, p));
@@ -345,15 +351,11 @@ function mergeExtracted(base, ext) {
   if (ext.name) out.name = ext.name;
   // REF (titre) de la première cellule des caractéristiques principales
   if (ext.ref && out.specsTop[0]) out.specsTop[0].label = ext.ref;
-  // valeurs (on conserve nos titres FR par défaut)
-  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => { if (out.specsTop[i] && s && s.value) out.specsTop[i].value = s.value; });
-  if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => {
-    if (out.specsDimensions[i] && s) {
-      if (s.label) out.specsDimensions[i].label = s.label;
-      if (s.value) out.specsDimensions[i].value = s.value;
-    }
-  });
-  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => { if (out.features[i] && s && s.value) out.features[i].value = s.value; });
+  // L'IA peut substituer titre ET valeur si l'info attendue est absente
+  const mergeCell = (dst, s) => { if (!dst || !s) return; if (s.label) dst.label = s.label; if (s.value) dst.value = s.value; };
+  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => mergeCell(out.specsTop[i], s));
+  if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => mergeCell(out.specsDimensions[i], s));
+  if (Array.isArray(ext.features)) ext.features.forEach((s, i) => mergeCell(out.features[i], s));
   return out;
 }
 

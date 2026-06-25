@@ -9,12 +9,12 @@
       "value": "NOM"
     },
     {
-      "label": "NIVEAU",
-      "value": "DÉBUTANT\nINTERMÉDIAIRE"
-    },
-    {
       "label": "PROGRAMME",
       "value": "ALL ROUND"
+    },
+    {
+      "label": "NIVEAU",
+      "value": "DÉBUTANT\nINTERMÉDIAIRE"
     },
     {
       "label": "TECHNOLOGIE",
@@ -52,32 +52,38 @@
     {
       "label": "ACCESSOIRE 1",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     },
     {
       "label": "ACCESSOIRE 2",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     },
     {
       "label": "ACCESSOIRE 3",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     },
     {
       "label": "ACCESSOIRE 4",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     },
     {
       "label": "ACCESSOIRE 5",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     },
     {
       "label": "ACCESSOIRE 6",
       "sub": "REF. XX XXXX",
-      "image": ""
+      "image": "",
+      "enabled": true
     }
   ],
   "readMore": "DÉCRIVEZ ICI LE PRODUIT : SES ATOUTS, SA CONSTRUCTION, SES MATÉRIAUX ET SES SENSATIONS DE GLISSE. CE TEXTE EST LIMITÉ À 505 CARACTÈRES, ESPACES COMPRIS, ET DOIT RESTER EN MAJUSCULES POUR RESPECTER LA CHARTE GRAPHIQUE. LORSQUE VOUS COLLEZ L'URL D'UNE PAGE PRODUIT, L'AGENT IA EXTRAIT ET REMPLIT AUTOMATIQUEMENT CE BLOC AVEC LA DESCRIPTION OFFICIELLE DE LA MARQUE. PERSONNALISEZ-LE ENSUITE SELON VOS BESOINS POUR METTRE EN AVANT LES POINTS FORTS ET LES BÉNÉFICES CLÉS DE CE MODÈLE AUPRÈS DE VOS CLIENTS ET D",

@@ -165,13 +165,13 @@
     </div>
 
     <div class="pack-icons">
-      {{#each pack}}
+      {{#each pack}}{{#if enabled}}
       <div class="item">
         <div class="disc">{{#if image}}<img class="pack-img" src="{{image}}" alt="{{label}}">{{else}}<svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="#c2c2c2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M4.5 17.5l4.5-4.5 3 3 3.5-3.5 4 4"/></svg>{{/if}}</div>
         <div class="name">{{label}}</div>
         {{#if sub}}<div class="sub">{{sub}}</div>{{/if}}
       </div>
-      {{/each}}
+      {{/if}}{{/each}}
     </div>
 
     <div class="gradient"></div>

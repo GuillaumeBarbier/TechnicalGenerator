@@ -48,6 +48,7 @@ body{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;background:var(--bg)
 .pairgrp{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px;background:#fafbfc;}
 .pairgrp .fld:last-child{margin-bottom:0;}
 .counter{font-size:11px;color:var(--muted);text-align:right;margin-top:2px;}
+.pairgrp.disabled{opacity:.5;}
 
 .stage{overflow:auto;background:#d9dbe0;display:flex;justify-content:center;align-items:flex-start;padding:28px;}
 .stage-inner{box-shadow:0 8px 30px rgba(0,0,0,.18);}

@@ -48,11 +48,11 @@ const SUP_SHAPE = `{
   "name": "nom du modèle (ex: IOTA)",
   "ref": "référence (ex: REF. LB7567)",
   "specsTop": [
-    {"value": "nom du modèle (identique à name)"},
-    {"value": "niveau (ex: DÉBUTANT INTERMÉDIAIRE)"},
-    {"value": "programme (ex: ALL ROUND)"},
-    {"value": "technologie (ex: DROPSTITCH FUSION)"},
-    {"value": "charge max (ex: JUSQU'À 135 KG)"}
+    {"label": "la référence (ex: REF. LB7567)", "value": "nom du modèle (identique à name)"},
+    {"label": "PROGRAMME", "value": "ex: ALL ROUND"},
+    {"label": "NIVEAU", "value": "ex: DÉBUTANT INTERMÉDIAIRE"},
+    {"label": "TECHNOLOGIE", "value": "ex: DROPSTITCH FUSION"},
+    {"label": "CHARGE MAX.", "value": "ex: JUSQU'À 135 KG"}
   ],
   "specsDimensions": [
     {"label": "LONGUEUR <cm> cm", "value": "longueur en pieds/pouces (ex: 10')"},
@@ -61,11 +61,11 @@ const SUP_SHAPE = `{
     {"label": "VOLUME", "value": "volume (ex: 240 L)"}
   ],
   "features": [
-    {"value": "point fort 1"},
-    {"value": "point fort 2"},
-    {"value": "point fort 3"},
-    {"value": "point fort 4"},
-    {"value": "point fort 5"}
+    {"label": "titre du point fort 1", "value": "valeur (ou 'CHECK' pour une coche)"},
+    {"label": "titre du point fort 2", "value": "valeur"},
+    {"label": "titre du point fort 3", "value": "valeur"},
+    {"label": "titre du point fort 4", "value": "valeur"},
+    {"label": "titre du point fort 5", "value": "valeur"}
   ],
   "readMore": "description marketing en MAJUSCULES, 505 caractères MAXIMUM (espaces compris)",
   "image": "URL absolue du visuel principal, ou vide"
@@ -86,8 +86,10 @@ async function extractWithClaude(pageText, fallbackImage) {
     "Garde les valeurs courtes et EN MAJUSCULES comme sur une fiche technique. " +
     "Pour les dimensions, mets la valeur métrique (cm) dans le label et l'impérial dans value. " +
     "Le champ readMore est une description marketing EN MAJUSCULES limitée à 505 caractères MAXIMUM (espaces compris) — résume si besoin. " +
-    "Pour features, donne 5 points forts courts. " +
-    "Laisse une valeur vide ('') si l'information est introuvable. Réponds UNIQUEMENT par le JSON.";
+    "Pour specsTop et features : essaie d'abord de renseigner l'information correspondant au label demandé ; " +
+    "si elle est introuvable sur la page, tu PEUX remplacer le titre (label) ET la valeur par une autre " +
+    "caractéristique intéressante pour la fiche technique (courte, en MAJUSCULES). " +
+    "Laisse une valeur vide ('') seulement si tu n'as vraiment rien de pertinent. Réponds UNIQUEMENT par le JSON.";
 
   const user =
     `Voici le contenu de la page produit :\n\n${pageText}\n\n` +
