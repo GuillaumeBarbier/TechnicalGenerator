@@ -15,20 +15,39 @@ Premier template livré : **SUP** (stand-up paddle), recréé d'après le templa
 
 ```bash
 npm install
-export ANTHROPIC_API_KEY=sk-ant-...      # nécessaire seulement pour l'extraction IA
+cp .env.example .env          # puis ouvrez .env et collez votre clé API
 npm start
 # → http://localhost:3000
 ```
 
-Sans clé API, l'éditeur manuel et l'aperçu fonctionnent ; seule l'extraction IA est désactivée.
+Sans clé, l'éditeur manuel et l'aperçu fonctionnent ; seule l'extraction IA est désactivée.
 
-Variables d'environnement :
+## Connecter l'agent IA (où mettre le token)
+
+L'extraction supporte **OpenAI (ChatGPT)** ou **Anthropic (Claude)**.
+
+1. Copiez le modèle de configuration : `cp .env.example .env`
+2. Ouvrez `.env` et renseignez votre clé :
+   - OpenAI : `OPENAI_API_KEY=sk-...` (clé créée sur platform.openai.com → API keys)
+   - ou Claude : `ANTHROPIC_API_KEY=sk-ant-...`
+3. `npm start`.
+
+> ⚠️ **Sécurité — la clé ne doit jamais finir sur GitHub.** Elle se met **uniquement** dans le fichier `.env`, qui est listé dans `.gitignore` et donc **jamais commité**. Ne collez jamais de clé dans le code, le README, ou un fichier suivi par git. La clé reste côté serveur (jamais envoyée au navigateur).
+
+> 💡 L'API OpenAI est facturée séparément de l'abonnement ChatGPT : vérifiez vos crédits/moyen de paiement sur platform.openai.com → Billing.
+
+### Variables d'environnement
 
 | Variable | Défaut | Rôle |
 |---|---|---|
+| `AI_PROVIDER` | auto | `openai` ou `anthropic` (auto-détecté selon la clé présente) |
+| `OPENAI_API_KEY` | — | clé API OpenAI (ChatGPT) |
+| `OPENAI_MODEL` | `gpt-4o-mini` | modèle OpenAI |
+| `ANTHROPIC_API_KEY` | — | clé API Claude |
+| `ANTHROPIC_MODEL` | `claude-opus-4-8` | modèle Claude |
 | `PORT` | `3000` | port HTTP |
-| `ANTHROPIC_API_KEY` | — | clé API Claude (extraction IA) |
-| `ANTHROPIC_MODEL` | `claude-opus-4-8` | modèle utilisé pour l'extraction |
+
+Pour un déploiement (serveur/hébergeur), définissez ces variables dans l'environnement de l'hôte plutôt que dans un fichier.
 
 ---
 
