@@ -105,7 +105,7 @@ const TEMPLATES = {
   generic: { name: 'Générique — photos + QR', file: '/templates/generic.html', sample: '/data/sample-generic.json' },
 };
 
-const SCHEMA = { text: [{ key: 'badge', label: 'Badge (ex: NEW 2026)' }] };
+const SCHEMA = { text: [{ key: 'badge', label: 'Badge (ex: SÉLECTION 2026)' }] };
 
 let tplId = 'sup';
 let state = null;
