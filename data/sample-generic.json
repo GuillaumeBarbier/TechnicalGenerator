@@ -84,9 +84,9 @@
       "check": false
     },
     {
-      "label": "Point Fort 5",
-      "value": "VALEUR",
-      "check": false
+      "label": "MARQUE FRANÇAISE",
+      "value": "",
+      "check": true
     }
   ]
 }
