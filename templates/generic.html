@@ -75,10 +75,15 @@
   /* Bande dégradé en bas + points forts */
   .gradient{position:absolute;left:0;right:0;top:1022px;bottom:0;
     background:linear-gradient(105deg,var(--grad-from,#292929) 0%,var(--grad-to,#787878) 100%);z-index:1;}
-  .footer{position:absolute;left:52px;right:52px;bottom:34px;z-index:5;}
-  .footer .row{display:grid;grid-template-columns:repeat(5,1fr);}
-  .footer .cell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;}
-  .footer .lbl{font-size:9px;letter-spacing:1.2px;color:rgba(255,255,255,.85);}
+  /* le footer couvre toute la bande de dégradé et centre son contenu
+     verticalement (comme .brand) — marges haute/basse égales */
+  .footer{position:absolute;left:52px;right:52px;top:1022px;bottom:0;z-index:5;
+    display:flex;align-items:center;}
+  .footer .row{width:100%;display:grid;grid-template-columns:repeat(5,1fr);}
+  .footer .cell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+  /* hauteur d'intitulé figée sur 2 lignes => coches/valeurs alignées entre cellules */
+  .footer .lbl{font-size:9px;letter-spacing:1.2px;color:rgba(255,255,255,.85);line-height:1.3;
+    height:24px;display:flex;align-items:flex-end;justify-content:center;}
   .footer .val{font-family:"Heebo Black",Arial,sans-serif;font-size:12px;letter-spacing:1px;color:#fff;}
   .footer .chk{width:22px;height:22px;color:#fff;}
 </style>

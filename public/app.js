@@ -535,16 +535,20 @@ function mergeExtracted(base, ext) {
   if (ext.readMore) out.readMore = String(ext.readMore).slice(0, READMORE_MAX);
   if (ext.name) out.name = ext.name;
   if (typeof ext.whiteBg === 'boolean') out.whiteBg = ext.whiteBg;
-  // REF (titre) de la première cellule des caractéristiques principales
-  if (ext.ref && out.specsTop[0]) out.specsTop[0].label = ext.ref;
   // L'IA peut substituer titre ET valeur si l'info attendue est absente
-  const mergeCell = (dst, s) => {
+  const mergeCell = (dst, s, keepLabel) => {
     if (!dst || !s) return;
-    if (s.label) dst.label = s.label;
+    if (s.label && !keepLabel) dst.label = s.label;
     if (s.value) dst.value = s.value;
     if (typeof s.enabled === 'boolean') dst.enabled = s.enabled;
   };
-  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => mergeCell(out.specsTop[i], s));
+  // cellule 0 = référence : on garde son intitulé (piloté par ext.ref), pas le label IA
+  if (Array.isArray(ext.specsTop)) ext.specsTop.forEach((s, i) => mergeCell(out.specsTop[i], s, i === 0));
+  // 1re cellule : label = référence produit, value = nom du modèle
+  if (out.specsTop[0]) {
+    if (ext.ref) out.specsTop[0].label = ext.ref;
+    if (ext.name) out.specsTop[0].value = ext.name;
+  }
   if (Array.isArray(ext.specsDimensions)) ext.specsDimensions.forEach((s, i) => mergeCell(out.specsDimensions[i], s));
   if (Array.isArray(ext.features)) ext.features.forEach((s, i) => {
     const dst = out.features[i]; if (!dst || !s) return;
