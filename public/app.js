@@ -6,12 +6,12 @@
    Supporte :  {{var}}  {{a.b}}  {{#each list}}…{{/each}}
                {{#if cond}}…{{else}}…{{/if}}                      */
 function tokenize(str) {
-  const re = /\{\{\{?\s*([#\/]?)\s*([^}]*?)\s*\}?\}\}/g;
+  const re = /\{\{(\{)?\s*([#\/]?)\s*([^}]*?)\s*\}?\}\}/g;
   const tokens = [];
   let last = 0, m;
   while ((m = re.exec(str)) !== null) {
     if (m.index > last) tokens.push({ t: 'text', v: str.slice(last, m.index) });
-    const sigil = m[1], body = m[2].trim();
+    const raw = !!m[1], sigil = m[2], body = m[3].trim();
     if (sigil === '#') {
       const [kw, ...rest] = body.split(/\s+/);
       tokens.push({ t: 'open', kw, arg: rest.join(' ') });
@@ -20,7 +20,7 @@ function tokenize(str) {
     } else if (body === 'else') {
       tokens.push({ t: 'else' });
     } else {
-      tokens.push({ t: 'var', v: body });
+      tokens.push({ t: 'var', v: body, raw });
     }
     last = re.lastIndex;
   }
@@ -76,7 +76,9 @@ function renderNodes(nodes, ctx, root) {
   for (let k = 0; k < nodes.length; k++) {
     const n = nodes[k];
     if (n.t === 'text') out += n.v;
-    else if (n.t === 'var') out += esc(resolve(n.v, ctx, root) ?? '').replace(/\n/g, '<br>');
+    else if (n.t === 'var') out += n.raw
+      ? String(resolve(n.v, ctx, root) ?? '')
+      : esc(resolve(n.v, ctx, root) ?? '').replace(/\n/g, '<br>');
     else if (n.t === 'block') {
       // separate body into true / else part
       let truePart = n.body, elsePart = [];
@@ -111,6 +113,20 @@ let tplId = 'sup';
 let state = null;
 let templateHtml = '';
 let CATEGORIES = [];
+let BRANDS = [];
+
+function getBrand(id) {
+  return BRANDS.find(b => b.id === id) || BRANDS.find(b => b.id === 'aquadesign') || BRANDS[0] || null;
+}
+
+// Injecte le logo (et le CSS de marque) dans l'état selon la marque choisie.
+function applyBrand(id) {
+  const b = getBrand(id);
+  if (!b || !state) return;
+  state.brand = b.id;
+  state.logo = b.logo;
+  state.brandCss = b.brandCss || '';
+}
 
 function getCategory(id) {
   return CATEGORIES.find(c => c.id === id) || CATEGORIES.find(c => c.id === 'sup') || CATEGORIES[0] || null;
@@ -141,8 +157,12 @@ async function loadTemplate(id) {
   templateHtml = await fetch(TEMPLATES[tplId].file).then(r => r.text());
   state = await fetch(TEMPLATES[tplId].sample).then(r => r.json());
   if (!state.category) state.category = 'sup';
+  if (!state.brand) state.brand = 'aquadesign';
+  if (BRANDS.length) applyBrand(state.brand);            // injecte le logo
   const sel = document.getElementById('cat-select');
   if (sel && CATEGORIES.length) sel.value = state.category;
+  const bsel = document.getElementById('brand-select');
+  if (bsel && BRANDS.length) bsel.value = state.brand;
   buildForm();
   refresh();
 }
@@ -510,7 +530,8 @@ async function extractFromUrl() {
 function mergeExtracted(base, ext) {
   if (!ext) return base;
   const out = JSON.parse(JSON.stringify(base));
-  ['brand', 'badge', 'image'].forEach(k => { if (ext[k]) out[k] = ext[k]; });
+  // 'brand' (id de marque) reste piloté par le sélecteur, pas par l'IA.
+  ['badge', 'image'].forEach(k => { if (ext[k]) out[k] = ext[k]; });
   if (ext.readMore) out.readMore = String(ext.readMore).slice(0, READMORE_MAX);
   if (ext.name) out.name = ext.name;
   if (typeof ext.whiteBg === 'boolean') out.whiteBg = ext.whiteBg;
@@ -561,6 +582,28 @@ async function loadCategories() {
   });
 }
 
+async function loadBrandList() {
+  const sel = document.getElementById('brand-select');
+  if (!sel) return;
+  try {
+    const r = await fetch('/api/brands');
+    BRANDS = (await r.json()).brands || [];
+  } catch {
+    try { BRANDS = (await fetch('/data/brands.json').then(r => r.json())).brands || []; }
+    catch { BRANDS = []; }
+  }
+  sel.innerHTML = '';
+  BRANDS.forEach(b => {
+    const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; sel.appendChild(o);
+  });
+  if (state) {
+    applyBrand(state.brand || 'aquadesign');
+    sel.value = state.brand;
+    refresh();
+  }
+  sel.addEventListener('change', e => { applyBrand(e.target.value); refresh(); });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const sel = document.getElementById('tpl-select');
   Object.entries(TEMPLATES).forEach(([id, t]) => {
@@ -570,6 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
   sel.addEventListener('change', e => loadTemplate(e.target.value));
 
   loadCategories();
+  loadBrandList();
   boot();
   document.getElementById('print-btn').addEventListener('click', printSheet);
   document.getElementById('extract-btn').addEventListener('click', extractFromUrl);

@@ -12,6 +12,7 @@ const path = require('path');
 
 const { renderSup, loadSample } = require('./lib/render');
 const { fetchPageText, extractData, providerInfo, loadCategories } = require('./lib/extract');
+const { loadBrands } = require('./lib/brands');
 
 const OUT_DIR = path.join(__dirname, 'output');
 
@@ -42,6 +43,15 @@ server.registerTool('list_product_categories', {
   specsTop: c.specsTop.map(s => s.label),
   specsDimensions: c.specsDimensions.map(s => s.label),
 }))));
+
+/* 1ter. Marques disponibles (logo) */
+server.registerTool('list_brands', {
+  title: 'Lister les marques disponibles',
+  description:
+    "Retourne les marques disponibles (id + nom). Passez l'id dans le champ 'brand' des données " +
+    "de generate_sup_fiche pour afficher le logo correspondant (ex: aquadesign, lozen).",
+  inputSchema: {},
+}, async () => json(loadBrands().map(b => ({ id: b.id, name: b.name }))));
 
 /* 2. Extraction depuis une URL produit */
 server.registerTool('extract_product_data', {

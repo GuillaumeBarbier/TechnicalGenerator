@@ -5,6 +5,7 @@
 const express = require('express');
 const path = require('path');
 const { fetchPageText, extractData, providerInfo, loadCategories } = require('./lib/extract');
+const { loadBrands } = require('./lib/brands');
 const { generateQr } = require('./lib/qr');
 const { dominantColorsFromUrl } = require('./lib/colors');
 
@@ -34,6 +35,10 @@ app.post('/api/extract', async (req, res) => {
 
 app.get('/api/categories', (_req, res) => {
   res.json({ categories: loadCategories() });
+});
+
+app.get('/api/brands', (_req, res) => {
+  res.json({ brands: loadBrands() });
 });
 
 app.get('/api/colors', async (req, res) => {
