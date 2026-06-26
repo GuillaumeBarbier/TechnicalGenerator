@@ -109,7 +109,7 @@ const TEMPLATES = {
 
 const SCHEMA = { text: [{ key: 'badge', label: 'Badge (ex: SÉLECTION 2026)' }] };
 
-let tplId = 'sup';
+let tplId = 'generic';
 let state = null;
 let templateHtml = '';
 let CATEGORIES = [];
