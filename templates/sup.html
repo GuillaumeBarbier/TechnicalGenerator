@@ -35,7 +35,9 @@
 
   /* ---------- Header ---------- */
   .brand{
-    position:absolute;top:40px;left:0;right:0;
+    /* hauteur 0 + align-items:center => le logo est centré verticalement sur
+       cette ligne quelle que soit sa hauteur (logos de marques différentes) */
+    position:absolute;top:47px;left:0;right:0;height:0;
     display:flex;justify-content:center;align-items:center;
   }
   .brand .logo{height:14px;width:auto;}
